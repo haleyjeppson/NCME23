@@ -1,11 +1,4 @@
 ## ----setup, include=FALSE-------------------------------------------------------------------
-knitr::opts_chunk$set(warning = FALSE, message = FALSE, echo = FALSE)
-options(htmltools.dir.version = FALSE, message = FALSE, warning = FALSE)
-nces_pal <- c("#69cadf", "#f4602a", "#fbb03b", "#3273c2", "#c1cb52", "#bc53a7", "#5daa3a", "#c62f34", "#1bafac")
-library(colorspace)
-library(ggtext)
-
-
 ## ----eval = FALSE, echo = TRUE--------------------------------------------------------------
 ## my_packages <- c("rmarkdown", "knitr", "tidyverse", 'patchwork',
 ##                  "cowplot",  'colorspace', 'ggtext', 'ggokabeito',
@@ -36,12 +29,24 @@ library(tidyverse)
 ## ----plots-3, echo = FALSE, fig.align='bottom', fig.height=5, fig.width=15------------------
 library(ggplot2)
 data(diamonds)
-p1 <- ggplot(diamonds, aes(cut, fill=cut)) + geom_bar() + labs(title = "Bar Chart", subtitle = "Cartesian coordinates") +
-  scale_fill_brewer(palette = "Set2", direction = -1) + theme_minimal()
+p1 <- ggplot(diamonds, aes(cut, fill=cut)) + 
+  geom_bar() + 
+  labs(title = "Bar Chart", subtitle = "Cartesian coordinates") +
+  scale_fill_brewer(palette = "Set2", direction = -1) + 
+  theme_minimal()
 
-p2 <- ggplot(diamonds, aes(factor(1), fill=cut)) + geom_bar(width=1) + labs(x="", title = "Fill-Bar", subtitle = "Cartesian coordinates") + scale_fill_brewer(palette = "Set2", direction = -1)+ theme_minimal()
+p2 <- ggplot(diamonds, aes(factor(1), fill=cut)) +
+  geom_bar(width=1) + 
+  labs(x="", title = "Fill-Bar", subtitle = "Cartesian coordinates") +
+  scale_fill_brewer(palette = "Set2", direction = -1) + 
+  theme_minimal()
 
-p3 <- ggplot(diamonds, aes(factor(1), fill=cut)) + geom_bar(width=1) + coord_polar(theta= "y") + labs(x="", title = "Fill-Bar", subtitle = "Polar coordinates") + scale_fill_brewer(palette = "Set2", direction = -1) + theme_minimal()
+p3 <- ggplot(diamonds, aes(factor(1), fill=cut)) + 
+  geom_bar(width=1) + 
+  coord_polar(theta= "y") + 
+  labs(x="", title = "Fill-Bar", subtitle = "Polar coordinates") +
+  scale_fill_brewer(palette = "Set2", direction = -1) + 
+  theme_minimal()
 
 library(patchwork)
 p1 + p2 + p3
@@ -50,6 +55,9 @@ p1 + p2 + p3
 ## ----fig.height=9.5, fig.width=12-----------------------------------------------------------
 library(tidyverse)
 library(NCME23data)
+library(colorspace)
+library(ggtext)
+nces_pal <- c("#69cadf", "#f4602a", "#fbb03b", "#3273c2", "#c1cb52", "#bc53a7", "#5daa3a", "#c62f34", "#1bafac")
 data(pisa_small)
 ggplot(data = pisa_small)
 
@@ -64,30 +72,34 @@ ggplot(data = pisa_small, aes(x = math, y = region)) +
 
 
 ## ----fig.height=9.5, fig.width=12-----------------------------------------------------------
-ggplot(data = pisa_small, aes(x = math, y = region, fill = region)) +
+ggplot(data = pisa_small, 
+       aes(x = math, y = region, fill = region)) +
     geom_boxplot()
 
 
 ## ----fig.height=9.5, fig.width=12-----------------------------------------------------------
-ggplot(data = pisa_small, aes(x = math, y = region,  color = region, fill = region)) +
+ggplot(data = pisa_small, 
+       aes(x = math, y = region,  color = region, fill = region)) +
     geom_boxplot(alpha = 0.7) +
-  theme_minimal(base_family = "Zilla Slab", base_size = 15) +
+  theme_minimal(base_size = 15) +
   scale_color_manual(values = nces_pal)  +
   scale_fill_manual(values = nces_pal) +
   theme(legend.position = "none")
 
 
 ## ----fig.height=9.5, fig.width=12-----------------------------------------------------------
-ggplot(data = pisa_small, aes(x = math, y = region, color = region, fill =  region)) +
+ggplot(data = pisa_small, 
+       aes(x = math, y = region, color = region, fill =  region)) +
     geom_violin(alpha = 0.7) +
-  theme_minimal(base_family = "Zilla Slab", base_size = 15) +
+  theme_minimal(base_size = 15) +
   theme(legend.position = "none") +
   scale_color_manual(values = nces_pal)  +
   scale_fill_manual(values = nces_pal)
 
 
 ## ----fig.height=9.5, fig.width=12-----------------------------------------------------------
-ggplot(data = pisa_small, aes(x = math, y = region, color = region, fill =  region)) +
+ggplot(data = pisa_small, 
+       aes(x = math, y = region, color = region, fill =  region)) +
     geom_point(
     aes(fill = region),
     color = "transparent",
@@ -97,14 +109,15 @@ ggplot(data = pisa_small, aes(x = math, y = region, color = region, fill =  regi
     alpha = .3,
     position = position_jitter(seed = 1, width = .12)
   ) +
-  theme_minimal(base_family = "Zilla Slab", base_size = 15) +
+  theme_minimal(base_size = 15) +
   theme(legend.position = "none") +
   scale_color_manual(values = nces_pal)  +
   scale_fill_manual(values = nces_pal)
 
 
 ## ----fig.height=9.5, fig.width=12-----------------------------------------------------------
-ggplot(data = pisa_small, aes(x = math, y = region, color = region, fill =  region)) +
+ggplot(data = pisa_small, 
+       aes(x = math, y = region, color = region, fill =  region)) +
   geom_point(
     aes(color = region,
         color = after_scale(darken(color, .1, space = "HLS"))),
@@ -123,14 +136,15 @@ ggplot(data = pisa_small, aes(x = math, y = region, color = region, fill =  regi
     alpha = .3,
     position = position_jitter(seed = 1, width = .12)
   )  +
-  theme_minimal(base_family = "Zilla Slab", base_size = 15) +
+  theme_minimal(base_size = 15) +
   theme(legend.position = "none") +
   scale_color_manual(values = nces_pal) +
   scale_fill_manual(values = nces_pal) 
 
 
 ## ----fig.height=9.5, fig.width=12-----------------------------------------------------------
-ggplot(data = pisa_small, aes(x = math, y = region, color = region, fill = region)) +
+ggplot(data = pisa_small, 
+       aes(x = math, y = region, color = region, fill = region)) +
   geom_point(
     aes(color = region,
         color = after_scale(darken(color, .1, space = "HLS"))),
@@ -151,8 +165,10 @@ ggplot(data = pisa_small, aes(x = math, y = region, color = region, fill = regio
   )  +
   scale_color_manual(values = nces_pal) +
   scale_fill_manual(values = nces_pal) +
-  labs(x = "Math score", y = NULL, title = "2015 PISA Math scores by region") +
-  theme_minimal(base_family = "Zilla Slab", base_size = 15) +
+  labs(x = "Math score", 
+       y = NULL, 
+       title = "2015 PISA Math scores by region") +
+  theme_minimal(base_size = 15) +
   theme(legend.position = "none",
         panel.grid.minor.y = element_blank(),
         panel.grid.major.y = element_blank(),
@@ -175,7 +191,9 @@ ggplot(data = pisa_small, aes(x = math, y = region, color = region, fill = regio
 
 
 ## ----fig.height=9.5, fig.width=12-----------------------------------------------------------
-ggplot(data = pisa_small, aes(x = math, y = region,  color = region, fill =  after_scale(lighten(color, .5)))) +
+ggplot(data = pisa_small, 
+       aes(x = math, y = region,  color = region, 
+           fill = after_scale(lighten(color, .5)))) +
   geom_boxplot(
     aes(color = region,
         color = after_scale(darken(color, .1, space = "HLS")),
@@ -203,8 +221,10 @@ ggplot(data = pisa_small, aes(x = math, y = region,  color = region, fill =  aft
   )  +
   scale_color_manual(values = nces_pal) +
   scale_fill_manual(values = nces_pal) +
-  labs(x = "Math score", y = NULL, title = "2015 PISA Math scores by region") +
-  theme_minimal(base_family = "Zilla Slab", base_size = 15) +
+  labs(x = "Math score", 
+       y = NULL, 
+       title = "2015 PISA Math scores by region") +
+  theme_minimal(base_size = 15) +
   theme(legend.position = "none",
         panel.grid.minor.y = element_blank(),
         panel.grid.major.y = element_blank(),
@@ -227,7 +247,9 @@ ggplot(data = pisa_small, aes(x = math, y = region,  color = region, fill =  aft
 
 
 ## ----fig.height=9.5, fig.width=12-----------------------------------------------------------
-ggplot(data = pisa_small, aes(x = math, y = region,  color = region, fill =  after_scale(lighten(color, .5)))) +
+ggplot(data = pisa_small, 
+       aes(x = math, y = region,  color = region, 
+           fill =  after_scale(lighten(color, .5)))) +
   geom_boxplot(
     aes(color = region,
         color = after_scale(darken(color, .1, space = "HLS")),
@@ -255,8 +277,10 @@ ggplot(data = pisa_small, aes(x = math, y = region,  color = region, fill =  aft
   )  +
   scale_color_manual(values = nces_pal) +
   scale_fill_manual(values = nces_pal) +
-  labs(x = "Math score", y = NULL, title = "2015 PISA Math scores by region") +
-  theme_minimal(base_family = "Zilla Slab", base_size = 15) +
+  labs(x = "Math score", 
+       y = NULL, 
+       title = "2015 PISA Math scores by region") +
+  theme_minimal(base_size = 15) +
   theme(legend.position = "none",
         panel.grid.minor.y = element_blank(),
         panel.grid.major.y = element_blank(),
@@ -279,7 +303,9 @@ ggplot(data = pisa_small, aes(x = math, y = region,  color = region, fill =  aft
 
 
 ## ----fig.height=9.5, fig.width=12-----------------------------------------------------------
-plot_ex <- ggplot(data = pisa_small, aes(x = math, y = region,  color = region, fill =  after_scale(lighten(color, .5)))) +
+plot_ex <- ggplot(data = pisa_small, 
+                  aes(x = math, y = region,  color = region, 
+                      fill =  after_scale(lighten(color, .5)))) +
   ggdist::stat_halfeye(
     adjust = .5, 
     height = .6, 
@@ -313,8 +339,10 @@ plot_ex <- ggplot(data = pisa_small, aes(x = math, y = region,  color = region, 
   )  +
   scale_color_manual(values = nces_pal) +
   scale_fill_manual(values = nces_pal) +
-  labs(x = "Math score", y = NULL, title = "2015 PISA Math scores by region") +
-  theme_minimal(base_family = "Zilla Slab", base_size = 15) +
+  labs(x = "Math score", 
+       y = NULL,
+       title = "2015 PISA Math scores by region") +
+  theme_minimal(base_size = 15) +
   theme(legend.position = "none",
         panel.grid.minor.y = element_blank(),
         panel.grid.major.y = element_blank(),
@@ -338,7 +366,9 @@ plot_ex
 
 
 ## ----fig.height=9.5, fig.width=12-----------------------------------------------------------
-plot_ex <- ggplot(data = pisa_small, aes(x = math, y = region,  color = region, fill =  after_scale(lighten(color, .5)))) +
+plot_ex <- ggplot(data = pisa_small, 
+                  aes(x = math, y = region,  color = region, 
+                      fill =  after_scale(lighten(color, .5)))) +
   ggdist::stat_halfeye(
     adjust = .5, 
     height = .6, 
@@ -372,8 +402,10 @@ plot_ex <- ggplot(data = pisa_small, aes(x = math, y = region,  color = region, 
   )  +
   scale_color_manual(values = nces_pal) +
   scale_fill_manual(values = nces_pal) +
-  labs(x = "Math score", y = NULL, title = "2015 PISA Math scores by region") +
-  theme_minimal(base_family = "Zilla Slab", base_size = 15) +
+  labs(x = "Math score", 
+       y = NULL, 
+       title = "2015 PISA Math scores by region") +
+  theme_minimal(base_size = 15) +
   theme(legend.position = "none",
         panel.grid.minor.y = element_blank(),
         panel.grid.major.y = element_blank(),
@@ -405,7 +437,6 @@ plot_ex  +
         color = region,
         weight = weight,
         color = after_scale(darken(color, .1, space = "HLS"))),
-    family = "Roboto Mono",
     fontface = "bold",
     size = 4.5,
     vjust = -2.5,
@@ -423,7 +454,6 @@ plot_ex  +
         color = region,
         weight = weight,
         color = after_scale(darken(color, .1, space = "HLS"))),
-    family = "Roboto Mono",
     fontface = "bold",
     size = 4.5,
     vjust = -1,

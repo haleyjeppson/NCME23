@@ -1,7 +1,5 @@
 ## ----setup, include=FALSE-------------------------------------------------------------------
-knitr::opts_chunk$set(warning = FALSE, message = FALSE, echo = TRUE)
-options(htmltools.dir.version = FALSE, message = FALSE, warning = FALSE)
-library(tidyverse)
+\library(tidyverse)
 library(ggthemes)
 library(ggokabeito)
 
@@ -274,7 +272,8 @@ ggplot(mpg,
 
 
 ## -------------------------------------------------------------------------------------------
-p <- ggplot(mpg, aes(x = displ, y =  cty, colour= factor(class))) + geom_point()
+p <- ggplot(mpg, aes(x = displ, y =  cty, colour= factor(class))) +
+  geom_point()
 
 
 ## ----fig.height = 6-------------------------------------------------------------------------
@@ -286,7 +285,8 @@ p + theme_minimal()
 
 
 ## -------------------------------------------------------------------------------------------
-p <- ggplot(mpg, aes(x = displ, y =  cty, colour= factor(class))) + geom_point()
+p <- ggplot(mpg, aes(x = displ, y =  cty, colour= factor(class))) +
+  geom_point()
 
 
 ## ----fig.height = 6-------------------------------------------------------------------------

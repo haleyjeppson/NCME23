@@ -1,6 +1,4 @@
 ## ----setup, include=FALSE-------------------------------------------------------------------
-knitr::opts_chunk$set(warning = FALSE, message = FALSE, echo = FALSE, dev = "ragg_png", retina= 1, dpi= 200)
-options(htmltools.dir.version = FALSE, message = FALSE, warning = FALSE)
 library(tidyverse)
 
 
