@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>ggplot2 Concepts</title>
+    <meta charset="utf-8" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/grayscale.css" type="text/css" />
+    <link rel="stylesheet" href="css/fonts.css" type="text/css" />
+    <link rel="stylesheet" href="css/layouts.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# ggplot2 Concepts
+]
+
+---
+
+
+
+
+
+class: inverse
+## Outline
+
+&lt;br&gt;
+### 1. A layered grammar
+
+### 2. Geometrical layers
+  
+### 3. Statistical layers
+
+### 4. Facets
+
+### 5. Storing a ggplot as an object
+
+
+
+---
+## A layered grammar of graphics
+
+
+- ggplot2 works on the philosophy of adding layers to the visualization
+
+- there are 7 components of a plot  
+
+&lt;br&gt;
+.center[
+&lt;img src="images/layers2.png" width="500"&gt;
+]
+
+---
+
+## A layered grammar of graphics
+
+- only 3 of these components are necessary to make a layer:  
+
+  - **data** are the subjects &amp; objects of the data visualization  
+  
+  - **Aesthetic mappings** (aes) substitute visual properties (aesthetics) for the data
+
+  - The **geom** is what relates the data to a visual element.  
+
+- these three components allow us maximum flexibility to make subtle changes in each layer to clearly communicate our message.
+
+.center[
+&lt;br/&gt;
+&lt;img src="images/layers1.png" width="500"&gt;
+]
+
+---
+## The grammar of `{ggplot2}`
+
+&lt;br&gt;
+&lt;table style='width:100%;font-size:14pt;'&gt;
+  &lt;tr&gt;
+    &lt;th&gt;Component&lt;/th&gt;
+    &lt;th&gt;Function&lt;/th&gt;
+    &lt;th&gt;Explanation&lt;/th&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;&lt;b style='color:#67676;'&gt;Data&lt;/b&gt;&lt;/td&gt;
+    &lt;td&gt;&lt;code&gt;ggplot(data)&lt;/code&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;/td&gt;
+    &lt;td style='font-style:italic;'&gt;The raw data that you want to visualise.&lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;&lt;b style='color:#67676;'&gt;Aesthetics&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;/b&gt;&lt;/td&gt;
+    &lt;td&gt;&lt;code&gt;aes()&lt;/code&gt;&lt;/td&gt;
+    &lt;td style='font-style:italic;'&gt;Aesthetic mappings between variables and visual properties.&lt;/td&gt;
+  &lt;tr&gt;
+    &lt;td&gt;&lt;b style='color:#67676;'&gt;Geometries&lt;/b&gt;&lt;/td&gt;
+    &lt;td&gt;&lt;code&gt;geom_*()&lt;/code&gt;&lt;/td&gt;
+    &lt;td style='font-style:italic;'&gt;The geometric shapes representing the data.&lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;
+
+
+---
+
+## The grammar of `{ggplot2}`
+
+&lt;br&gt;
+&lt;table style='width:100%;font-size:14pt;'&gt;
+  &lt;tr&gt;
+    &lt;th&gt;Component&lt;/th&gt;
+    &lt;th&gt;Function&lt;/th&gt;
+    &lt;th&gt;Explanation&lt;/th&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;&lt;b style='color:#67676;'&gt;Data&lt;/b&gt;&lt;/td&gt;
+    &lt;td&gt;&lt;code&gt;ggplot(data)&lt;/code&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;/td&gt;
+    &lt;td style='font-style:italic;'&gt;The raw data that you want to visualise.&lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;&lt;b style='color:#67676;'&gt;Aesthetics&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;/b&gt;&lt;/td&gt;
+    &lt;td&gt;&lt;code&gt;aes()&lt;/code&gt;&lt;/td&gt;
+    &lt;td style='font-style:italic;'&gt;Aesthetic mappings between variables and visual properties.&lt;/td&gt;
+  &lt;tr&gt;
+    &lt;td&gt;&lt;b style='color:#67676;'&gt;Geometries&lt;/b&gt;&lt;/td&gt;
+    &lt;td&gt;&lt;code&gt;geom_*()&lt;/code&gt;&lt;/td&gt;
+    &lt;td style='font-style:italic;'&gt;The geometric shapes representing the data.&lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;&lt;b style='color:#67676;'&gt;Statistics&lt;/b&gt;&lt;/td&gt;
+    &lt;td&gt;&lt;code&gt;stat_*()&lt;/code&gt;&lt;/td&gt;
+    &lt;td style='font-style:italic;'&gt;The statistical transformations applied to the data.&lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;&lt;b style='color:#67676;'&gt;Scales&lt;/b&gt;&lt;/td&gt;
+    &lt;td&gt;&lt;code&gt;scale_*()&lt;/code&gt;&lt;/td&gt;
+    &lt;td style='font-style:italic;'&gt;Maps between the data and the aesthetic dimensions.&lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;&lt;b style='color:#67676;'&gt;Coordinate System&lt;/b&gt;&lt;/td&gt;
+    &lt;td&gt;&lt;code&gt;coord_*()&lt;/code&gt;&lt;/td&gt;
+    &lt;td style='font-style:italic;'&gt;The positioning of the data in a 2D data visualization.&lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;&lt;b style='color:#67676;'&gt;Facets&lt;/b&gt;&lt;/td&gt;
+    &lt;td&gt;&lt;code&gt;facet_*()&lt;/code&gt;&lt;/td&gt;
+    &lt;td style='font-style:italic;'&gt;The arrangement of the data into a grid of plots.&lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;&lt;b style='color:#67676;'&gt;Themes&lt;/b&gt;&lt;/td&gt;
+    &lt;td&gt;&lt;code&gt;theme()&lt;/code&gt; and&lt;br&gt; &lt;code&gt;theme_*()&lt;/code&gt;&lt;/td&gt;
+    &lt;td style='font-style:italic;'&gt;The overall visual defaults of a plot.&lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;
+
+
+---
+class: inverse, center, middle
+
+# Example
+
+---
+## The Data
+
+### OECD's Program for International Student Assessment (PISA)
+
+- aims to inform educational policies and practices
+- 540,000 15-year-olds from 72 participating countries and economies
+- designed to gauge mastery of key subjects (math, science, reading)
+- background questionnaire with questions about themselves, their family and home, and their school and learning experiences
+
+--
+
+
+```r
+## devtools::install_github("haleyjeppson/NCME23data")
+library(NCME23data)
+## weighted US sample of size 99
+data(pisa_usa)
+## weighted sample of 1000
+data(pisa_small)
+```
+
+---
+## Data Variables
+
+
+
+```
+##  [1] "country"                  "OECD"                    
+##  [3] "id"                       "weight"                  
+##  [5] "sex"                      "grade"                   
+##  [7] "computer"                 "software"                
+##  [9] "internet"                 "addit_time_math"         
+## [11] "addit_time_science"       "parent_support"          
+## [13] "parent_status"            "want_best_grades"        
+## [15] "want_best_student"        "test_anxiety"            
+## [17] "enjoy_cooperation"        "sense_of_belonging"      
+## [19] "parent_support_emotional" "HOMESCH"                 
+## [21] "ENTUSE"                   "ICTHOME"                 
+## [23] "ICTSCH"                   "wealth"                  
+## [25] "parent_edu"               "learning_mins"           
+## [27] "escs_index"               "teacher_support_science" 
+## [29] "teacher_direct_science"   "inquiry_based_science"   
+## [31] "science_self_efficacy"    "math"                    
+## [33] "reading"                  "science"                 
+## [35] "learning_hours"           "region"
+```
+
+---
+## Data
+
+.left-code[
+
+```r
+*ggplot(data = pisa_usa)
+```
+]
+.right-plot[
+&lt;img src="ggplot-concepts_files/figure-html/unnamed-chunk-3-1.png" width="100%" /&gt;
+]
+
+---
+## Aesthetic Mapping
+
+
+### Link variables in data to graphical properties 
+
+
+- **Axes**: `x`, `y`
+
+- **Grouping**: `group`
+
+- **Other visual properties**: `color`, `fill`, `alpha` (transparency), `size`, `shape`, `linetype`
+
+- **Other**: `weight`, `z`, `xmin`, `xmax`, `ymin`, `ymax`, ...
+
+
+---
+## Aesthetic Mapping
+
+Use the `aes()` function inside `ggplot()`
+
+.left-code[
+
+```r
+ggplot(data = pisa_usa,
+* mapping = aes(x = math, y = reading))
+```
+]
+.right-plot[
+&lt;img src="ggplot-concepts_files/figure-html/unnamed-chunk-4-1.png" width="100%" /&gt;
+]
+
+---
+## Aesthetic Mapping
+
+Use implicit matching
+
+.left-code[
+
+```r
+ggplot(pisa_usa,
+*      aes(x = math, y = reading))
+```
+]
+.right-plot[
+&lt;img src="ggplot-concepts_files/figure-html/unnamed-chunk-5-1.png" width="100%" /&gt;
+]
+
+
+
+
+
+
+---
+class: inverse, center, middle
+
+# Geometrical Layers
+
+
+---
+## Geometries
+
+### How to interpret aesthetics as graphical representations 
+
+
+![](ggplot-concepts_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
+
+
+???
+
+control the way that data is displayed
+
+
+
+---
+## Geometries
+
+We build up a data visualization in ggplot2 with the `+` operator.
+
+
+.left-code[
+
+```r
+ggplot(
+  pisa_usa, 
+  aes(x = math, y = reading)
+* ) +
+* geom_point()
+```
+]
+.right-plot[
+&lt;img src="ggplot-concepts_files/figure-html/unnamed-chunk-7-1.png" width="100%" /&gt;
+]
+---
+## Geometries
+
+Define mappings for a particular geom only
+
+
+.left-code[
+
+```r
+ggplot(pisa_usa) +
+* geom_point(aes(x = math, y = reading))
+```
+]
+.right-plot[
+&lt;img src="ggplot-concepts_files/figure-html/unnamed-chunk-8-1.png" width="100%" /&gt;
+]
+
+---
+## Geometries
+
+Define data for a particular geom only
+
+
+.left-code[
+
+```r
+*ggplot() +
+* geom_point(data = pisa_usa,
+             aes(x = math, y = reading))
+```
+]
+.right-plot[
+&lt;img src="ggplot-concepts_files/figure-html/unnamed-chunk-9-1.png" width="100%" /&gt;
+]
+
+
+
+---
+## Visual Properties of Layers
+
+The `geom_*()` suite of functions can take many arguments, which vary by the geom type
+
+
+
+.left-code[
+
+```r
+ggplot(
+    pisa_usa, 
+    aes(x = math, y = reading)
+  ) +
+  geom_point(
+*   color = "#3C5488",
+*   alpha = .7,
+*   shape = 17,
+*   stroke = 1,
+*   size = 5
+  )
+```
+]
+.right-plot[
+&lt;img src="ggplot-concepts_files/figure-html/unnamed-chunk-10-1.png" width="100%" /&gt;
+]
+
+
+
+---
+## Setting vs Mapping Visual Properties
+
+.tall[
+.pull-left[
+
+```r
+ggplot(
+    pisa_usa, 
+    aes(x = math, y = reading)
+  ) +
+  geom_point(
+*   color = "#3C5488",
+    alpha = .7
+  )
+```
+
+![](ggplot-concepts_files/figure-html/unnamed-chunk-11-1.png)&lt;!-- --&gt;
+]
+.pull-right[
+
+```r
+ggplot(
+    pisa_usa, 
+    aes(x = math, y = reading)
+  ) +
+  geom_point(
+*   aes(color = sex),
+    alpha = .7
+  )
+```
+
+![](ggplot-concepts_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
+]
+
+]
+
+
+---
+## Local vs. Global Encoding
+
+.tall[
+.pull-left[
+
+```r
+ggplot(
+    pisa_usa, 
+*   aes(x = math, y = reading)
+  ) +
+  geom_point(
+*   aes(color = sex),
+    alpha = .7
+  )
+```
+
+![](ggplot-concepts_files/figure-html/unnamed-chunk-13-1.png)&lt;!-- --&gt;
+]
+.pull-right[
+
+```r
+ggplot(
+    pisa_usa, 
+*   aes(x = math, y = reading,
+*       color = sex),
+  ) +
+  geom_point(
+    alpha = .7
+  )
+```
+
+![](ggplot-concepts_files/figure-html/unnamed-chunk-14-1.png)&lt;!-- --&gt;
+]
+]
+
+
+---
+## Other geoms
+
+There are many types of geoms and their mapping requirements differ
+
+.tall[
+.pull-left[
+
+```r
+ggplot(pisa_usa) +
+* geom_point(
+*   aes(x = math, y = reading),
+    color = "#3C5488", 
+    alpha = .7)
+```
+
+![](ggplot-concepts_files/figure-html/unnamed-chunk-15-1.png)&lt;!-- --&gt;
+]
+.pull-right[
+
+```r
+ggplot(pisa_usa) +
+* geom_density(
+*   aes(x = math),
+    color = "#3C5488", 
+    fill = "#3C5488",
+    alpha = .7)
+```
+
+![](ggplot-concepts_files/figure-html/unnamed-chunk-16-1.png)&lt;!-- --&gt;
+]
+]
+
+
+
+---
+## Other geoms
+
+There are many types of geoms and their mapping requirements differ
+
+.tall[
+.pull-left[
+
+```r
+ggplot(pisa_usa) +
+* geom_point(
+*   aes(x = math, y = reading,
+        color = parent_edu), 
+    alpha = .7)
+```
+
+![](ggplot-concepts_files/figure-html/unnamed-chunk-17-1.png)&lt;!-- --&gt;
+]
+.pull-right[
+
+```r
+ggplot(pisa_usa) +
+* geom_boxplot(
+*   aes(x = parent_edu, y = reading,
+        color = parent_edu,
+        fill = parent_edu), 
+    alpha = .7)
+```
+
+![](ggplot-concepts_files/figure-html/unnamed-chunk-18-1.png)&lt;!-- --&gt;
+]
+]
+
+
+---
+class: yourturn
+.center[
+## Your Turn
+]
+### Use code below to create a histogram of the math scores.&lt;br&gt;&amp;emsp;- Can you modify the width of the bins?&lt;br&gt;&amp;emsp;&amp;emsp;(Hint: run `?geom_histogram`)
+
+
+
+```r
+ggplot(pisa_usa, aes(x = math)) + 
+  ## your code here
+```
+
+
+### Use code below to create boxplots of math scores by sex. &lt;br&gt;&amp;emsp;- Can you make a violin plot instead a boxplot?&lt;br&gt;&amp;emsp;- Can you add color to the boxplots/violins?&lt;br&gt;&amp;emsp;&amp;emsp;(Hint: run `?geom_violin`)
+
+
+```r
+ggplot(pisa_usa, aes(x = sex, y = math)) + 
+  ## your code here
+```
+
+
+
+
+
+---
+## Adding Layers
+
+Begin with plot with one layer
+
+.left-code[
+
+```r
+ggplot(
+    pisa_usa, 
+    aes(x = parent_edu, y = reading,
+        fill = parent_edu, 
+        color = parent_edu)
+  ) +
+* geom_boxplot(
+*   alpha = .2
+* )
+```
+]
+.right-plot[
+&lt;img src="ggplot-concepts_files/figure-html/unnamed-chunk-21-1.png" width="100%" /&gt;
+]
+
+
+
+---
+## Adding Layers
+
+Layers are stacked in the order of code appearance
+
+.left-code[
+
+```r
+ggplot(
+    pisa_usa, 
+    aes(x = parent_edu, y = reading,
+        fill = parent_edu, 
+        color = parent_edu)
+  ) +
+  geom_boxplot( 
+    alpha = .2  
+  ) +           
+* geom_point(
+*   alpha = .5
+* )
+```
+]
+.right-plot[
+&lt;img src="ggplot-concepts_files/figure-html/unnamed-chunk-22-1.png" width="100%" /&gt;
+]
+
+
+---
+## Overwrite Global Aesthetics
+
+.left-code[
+
+```r
+ggplot(
+    pisa_usa, 
+    aes(x = parent_edu, y = reading,
+        fill = parent_edu, 
+*       color = parent_edu)
+  ) +
+  geom_boxplot( 
+    
+    alpha = .4
+  ) +           
+  geom_point(
+*   color = "black",
+    alpha = .5
+  ) 
+```
+]
+.right-plot[
+&lt;img src="ggplot-concepts_files/figure-html/unnamed-chunk-23-1.png" width="100%" /&gt;
+]
+
+
+
+
+
+---
+## What did we need?
+
+### Data, Aesthetics, Geometries
+
+### Everything else has sensible defaults
+
+.center[
+&lt;br/&gt;
+&lt;img src="images/layers2.png" width="500"&gt;
+]
+
+---
+class: inverse, center, middle
+# Statistical Layers
+
+---
+## Statistics
+
+### Describes how the data are modified in order to be expressed through the `geom`.
+
+**Stats and geoms go together**. 
+
+- Every `geom` has a default `stat` and vice versa.
+  - Count number of observations in each category for a bar chart
+  - Calculate summary statistics for a
+boxplot. 
+
+- `stat` can be specified inside of a geom and vice versa.
+
+
+
+???
+
+Transform input variables to displayed values:
+
+- Count number of observations in each category for a bar chart
+- Calculate summary statistics for a
+boxplot. 
+
+---
+## `stat_*()` &amp; `geom_*()`
+
+`geom_bar()` uses `stat_count()` by default
+
+.left-code[
+
+```r
+ggplot(pisa_usa, aes(x = parent_edu)) +
+* geom_bar()
+```
+]
+.right-plot[
+&lt;img src="ggplot-concepts_files/figure-html/unnamed-chunk-24-1.png" width="100%" /&gt;
+]
+
+---
+## `stat_*()` &amp; `geom_*()`
+
+If you have precomputed data, use identity stat
+
+.left-code[
+
+```r
+pisa_usa_counted &lt;- pisa_usa %&gt;%
+  count(parent_edu)
+
+*pisa_usa_counted
+```
+]
+.right-plot[
+
+```
+## # A tibble: 6 × 2
+##   parent_edu     n
+##   &lt;fct&gt;      &lt;int&gt;
+## 1 3              2
+## 2 6              2
+## 3 9             10
+## 4 12            28
+## 5 14            18
+## 6 16            39
+```
+]
+
+
+---
+## `stat_*()` &amp; `geom_*()`
+
+If you have precomputed data, use identity stat
+
+.left-code[
+
+```r
+pisa_usa_counted &lt;- pisa_usa %&gt;%
+  count(parent_edu)
+
+ggplot(pisa_usa_counted, 
+       aes(x = parent_edu)) +
+* geom_bar(aes(y = n),
+*          stat = 'identity')
+```
+]
+.right-plot[
+&lt;img src="ggplot-concepts_files/figure-html/unnamed-chunk-26-1.png" width="100%" /&gt;
+]
+
+---
+## `stat_*()` &amp; `geom_*()`
+
+... or use the `geom_col()` shortcut
+
+.left-code[
+
+```r
+pisa_usa_counted &lt;- pisa_usa %&gt;%
+  count(parent_edu)
+
+ggplot(pisa_usa_counted,
+       aes(x = parent_edu)) +
+* geom_col(aes(y = n))
+```
+]
+.right-plot[
+&lt;img src="ggplot-concepts_files/figure-html/unnamed-chunk-27-1.png" width="100%" /&gt;
+]
+
+---
+## `stat_*()` &amp; `geom_*()`
+
+Use `after_stat()` to modify mapping from stats
+
+.left-code[
+
+```r
+ggplot(pisa_usa) +
+  geom_bar(
+    aes(
+      x = parent_edu,
+*     y = after_stat(
+*       100 * count / sum(count)
+*       )
+    )
+  )
+```
+]
+.right-plot[
+&lt;img src="ggplot-concepts_files/figure-html/unnamed-chunk-28-1.png" width="100%" /&gt;
+ 
+]
+---
+class: inverse, center, middle
+# Facets
+
+
+
+---
+## Facets
+
+### Split data into multiple panels by categories
+
+- shows the same visualization for different subsets of the data 
+  - aka conditioning
+- a way to avoid overplotting
+
+--
+
+### Two faceting functions:
+
+- `facet_grid()`
+  - create a grid of graphs, by rows and columns
+- `facet_wrap()`
+  - create small multiples by "wrapping" a series of plots
+
+
+
+---
+## `facet_grid()`
+
+- use `vars()` to call on the variables
+
+.left-code[
+
+```r
+ggplot(pisa_small, 
+       aes(x = math)) +
+  geom_density(
+    color = "#3C5488",
+    fill = "#3C5488",
+    alpha = .7
+  ) +
+* facet_grid(
+*   cols = vars(sex),
+*   rows = vars(OECD)
+* )
+```
+
+
+]
+.right-plot[
+&lt;img src="ggplot-concepts_files/figure-html/unnamed-chunk-29-1.png" width="100%" /&gt;
+]
+
+
+
+---
+## `facet_wrap()`
+
+- use `vars()` to call on the variables
+- `nrow` and `ncol` arguments for dictating shape of grid
+
+.left-code[
+
+```r
+ggplot(pisa_small, 
+       aes(math, reading)) +
+  geom_point(
+    color = "#3C5488",
+    alpha = .7
+  ) +
+* facet_wrap(vars(region))
+```
+
+]
+.right-plot[
+&lt;img src="ggplot-concepts_files/figure-html/unnamed-chunk-30-1.png" width="100%" /&gt;
+]
+
+---
+class: yourturn
+.center[
+## Your Turn
+]
+### Use `nrow` or `ncol` to alter the shape of the grid in the `facet_wrap()` example to have two columns. Then again with one row.
+
+### Use the labeller parameter to modify the panel labels in the `facet_grid()` example such that the row labels read 'OCED: Yes' and 'OCED: No'. (Hint: run `?labeller`)
+
+
+---
+class: inverse, center, middle
+# ggplots as objects
+
+---
+## Save &amp; inspect a ggplot object
+
+
+
+```r
+pisa_plot &lt;- ggplot(pisa_usa, aes(x = math, y = reading, color = sex)) +
+  geom_point(alpha = .7)
+
+class(pisa_plot)
+```
+
+```
+## [1] "gg"     "ggplot"
+```
+
+---
+## Inspect a ggplot object
+
+
+
+```r
+str(pisa_plot)
+```
+
+```
+## List of 9
+##  $ data       : tibble [99 × 36] (S3: tbl_df/tbl/data.frame)
+##   ..$ country                 : chr [1:99] "United States" "United States" "United States" "United States" ...
+##   ..$ OECD                    : chr [1:99] "Yes" "Yes" "Yes" "Yes" ...
+##   ..$ id                      : int [1:99] 84010767 84010299 84002440 84004908 84006044 84007890 84010989 84005014 84009123 84009438 ...
+##   ..$ weight                  : num [1:99] 759 688 610 462 823 ...
+##   ..$ sex                     : chr [1:99] "Female" "Male" "Female" "Female" ...
+##   ..$ grade                   : num [1:99] 10 10 10 10 10 10 11 10 10 10 ...
+##   ..$ computer                : chr [1:99] "Yes" "No" "Yes" "Yes" ...
+##   ..$ software                : chr [1:99] "Yes" "Yes" "Yes" "Yes" ...
+##   ..$ internet                : Factor w/ 2 levels "Yes","No": 1 1 2 1 1 1 1 1 1 1 ...
+##   ..$ addit_time_math         : int [1:99] 1 9 6 2 14 4 7 10 19 2 ...
+##   ..$ addit_time_science      : int [1:99] 2 11 6 1 14 1 7 10 19 5 ...
+##   ..$ parent_support          : chr [1:99] "Strongly agree" "Strongly agree" "Strongly agree" "Strongly agree" ...
+##   ..$ parent_status           : chr [1:99] "Strongly agree" "Agree" "Strongly disagree" "Strongly agree" ...
+##   ..$ want_best_grades        : Factor w/ 4 levels "Strongly agree",..: 1 1 1 1 1 1 2 2 2 1 ...
+##   ..$ want_best_student       : chr [1:99] "Strongly agree" "Strongly agree" "Strongly agree" "Strongly agree" ...
+##   ..$ test_anxiety            : num [1:99] 0.857 -0.475 -0.539 1.724 -0.308 ...
+##   ..$ enjoy_cooperation       : num [1:99] 0.946 1.042 0.576 2.288 -0.288 ...
+##   ..$ sense_of_belonging      : num [1:99] 0.445 -1.196 -0.988 -0.862 -0.338 ...
+##   ..$ parent_support_emotional: num [1:99] 1.099 -0.75 0.566 1.099 1.099 ...
+##   ..$ HOMESCH                 : num [1:99] NA NA NA NA NA NA NA NA NA NA ...
+##   ..$ ENTUSE                  : num [1:99] NA NA NA NA NA NA NA NA NA NA ...
+##   ..$ ICTHOME                 : int [1:99] NA NA NA NA NA NA NA NA NA NA ...
+##   ..$ ICTSCH                  : int [1:99] NA NA NA NA NA NA NA NA NA NA ...
+##   ..$ wealth                  : num [1:99] 2.1451 -0.7076 -0.7871 0.0963 0.0902 ...
+##   ..$ parent_edu              : Factor w/ 6 levels "3","6","9","12",..: 6 6 4 4 3 6 5 6 3 6 ...
+##   ..$ learning_mins           : int [1:99] 1500 NA 1800 1250 1750 1750 NA 2700 1950 NA ...
+##   ..$ escs_index              : num [1:99] 1.491 0.935 -0.641 -0.796 -1.106 ...
+##   ..$ teacher_support_science : num [1:99] -0.497 0.821 1.448 0.303 0.913 ...
+##   ..$ teacher_direct_science  : num [1:99] 1.02 0.948 0.451 2.078 1.032 ...
+##   ..$ inquiry_based_science   : num [1:99] -0.854 1.795 0.815 0.452 0.203 ...
+##   ..$ science_self_efficacy   : num [1:99] -1.4044 3.2775 -0.0444 -0.6714 -0.0663 ...
+##   ..$ math                    : num [1:99] 432 498 494 323 549 ...
+##   ..$ reading                 : num [1:99] 532 542 570 396 621 ...
+##   ..$ science                 : num [1:99] 480 532 531 386 648 ...
+##   ..$ learning_hours          : num [1:99] 25 NA 30 21 29 29 NA 45 32 NA ...
+##   ..$ region                  : chr [1:99] "N. America" "N. America" "N. America" "N. America" ...
+##  $ layers     :List of 1
+##   ..$ :Classes 'LayerInstance', 'Layer', 'ggproto', 'gg' &lt;ggproto object: Class LayerInstance, Layer, gg&gt;
+##     aes_params: list
+##     compute_aesthetics: function
+##     compute_geom_1: function
+##     compute_geom_2: function
+##     compute_position: function
+##     compute_statistic: function
+##     computed_geom_params: NULL
+##     computed_mapping: NULL
+##     computed_stat_params: NULL
+##     constructor: call
+##     data: waiver
+##     draw_geom: function
+##     finish_statistics: function
+##     geom: &lt;ggproto object: Class GeomPoint, Geom, gg&gt;
+##         aesthetics: function
+##         default_aes: uneval
+##         draw_group: function
+##         draw_key: function
+##         draw_layer: function
+##         draw_panel: function
+##         extra_params: na.rm
+##         handle_na: function
+##         non_missing_aes: size shape colour
+##         optional_aes: 
+##         parameters: function
+##         rename_size: FALSE
+##         required_aes: x y
+##         setup_data: function
+##         setup_params: function
+##         use_defaults: function
+##         super:  &lt;ggproto object: Class Geom, gg&gt;
+##     geom_params: list
+##     inherit.aes: TRUE
+##     layer_data: function
+##     map_statistic: function
+##     mapping: NULL
+##     position: &lt;ggproto object: Class PositionIdentity, Position, gg&gt;
+##         compute_layer: function
+##         compute_panel: function
+##         required_aes: 
+##         setup_data: function
+##         setup_params: function
+##         super:  &lt;ggproto object: Class Position, gg&gt;
+##     print: function
+##     setup_layer: function
+##     show.legend: NA
+##     stat: &lt;ggproto object: Class StatIdentity, Stat, gg&gt;
+##         aesthetics: function
+##         compute_group: function
+##         compute_layer: function
+##         compute_panel: function
+##         default_aes: uneval
+##         dropped_aes: 
+##         extra_params: na.rm
+##         finish_layer: function
+##         non_missing_aes: 
+##         optional_aes: 
+##         parameters: function
+##         required_aes: 
+##         retransform: TRUE
+##         setup_data: function
+##         setup_params: function
+##         super:  &lt;ggproto object: Class Stat, gg&gt;
+##     stat_params: list
+##     super:  &lt;ggproto object: Class Layer, gg&gt; 
+##  $ scales     :Classes 'ScalesList', 'ggproto', 'gg' &lt;ggproto object: Class ScalesList, gg&gt;
+##     add: function
+##     clone: function
+##     find: function
+##     get_scales: function
+##     has_scale: function
+##     input: function
+##     n: function
+##     non_position_scales: function
+##     scales: list
+##     super:  &lt;ggproto object: Class ScalesList, gg&gt; 
+##  $ mapping    :List of 3
+##   ..$ x     : language ~math
+##   .. ..- attr(*, ".Environment")=&lt;environment: R_GlobalEnv&gt; 
+##   ..$ y     : language ~reading
+##   .. ..- attr(*, ".Environment")=&lt;environment: R_GlobalEnv&gt; 
+##   ..$ colour: language ~sex
+##   .. ..- attr(*, ".Environment")=&lt;environment: R_GlobalEnv&gt; 
+##   ..- attr(*, "class")= chr "uneval"
+##  $ theme      : list()
+##  $ coordinates:Classes 'CoordCartesian', 'Coord', 'ggproto', 'gg' &lt;ggproto object: Class CoordCartesian, Coord, gg&gt;
+##     aspect: function
+##     backtransform_range: function
+##     clip: on
+##     default: TRUE
+##     distance: function
+##     expand: TRUE
+##     is_free: function
+##     is_linear: function
+##     labels: function
+##     limits: list
+##     modify_scales: function
+##     range: function
+##     render_axis_h: function
+##     render_axis_v: function
+##     render_bg: function
+##     render_fg: function
+##     setup_data: function
+##     setup_layout: function
+##     setup_panel_guides: function
+##     setup_panel_params: function
+##     setup_params: function
+##     train_panel_guides: function
+##     transform: function
+##     super:  &lt;ggproto object: Class CoordCartesian, Coord, gg&gt; 
+##  $ facet      :Classes 'FacetNull', 'Facet', 'ggproto', 'gg' &lt;ggproto object: Class FacetNull, Facet, gg&gt;
+##     compute_layout: function
+##     draw_back: function
+##     draw_front: function
+##     draw_labels: function
+##     draw_panels: function
+##     finish_data: function
+##     init_scales: function
+##     map_data: function
+##     params: list
+##     setup_data: function
+##     setup_params: function
+##     shrink: TRUE
+##     train_scales: function
+##     vars: function
+##     super:  &lt;ggproto object: Class FacetNull, Facet, gg&gt; 
+##  $ plot_env   :&lt;environment: R_GlobalEnv&gt; 
+##  $ labels     :List of 3
+##   ..$ x     : chr "math"
+##   ..$ y     : chr "reading"
+##   ..$ colour: chr "sex"
+##  - attr(*, "class")= chr [1:2] "gg" "ggplot"
+```
+
+
+---
+## Add to a ggplot object
+
+
+
+```r
+pisa_plot +
+  geom_smooth(method = "lm")
+```
+
+![](ggplot-concepts_files/figure-html/unnamed-chunk-33-1.png)&lt;!-- --&gt;
+
+
+---
+class: inverse
+## Recap
+
+- `{ggplot2}` is a powerful library for reproducible graphic design
+
+- the components follow a consistent syntax
+
+- each ggplot needs at least data, some aesthetics, and a layer
+
+- we set constant propeties outside `aes()`
+
+- ... and map data-related properties inside `aes()`
+
+- local settings and mappings override global properties
+
+- grouping allows applying layers for subsets
+
+- we can store a ggplot object and add to it afterwards
+
+
+
+---
+## Resources
+
+- Documentation: http://ggplot2.tidyverse.org/reference/
+
+- RStudio cheat sheet for [ggplot2](https://posit.co/wp-content/uploads/2022/10/data-visualization-1.pdf)
+
+- Sam Tyner's [ggplot2 workshop](https://sctyner.github.io/user20-proposal.html)
+
+- Thomas Lin Pedersen's ggplot2 webinar: [part 1](https://youtu.be/h29g21z0a68) and [part 2](https://youtu.be/0m4yywqNPVY)
+
+- Cedric Scherer's ["A ggplot2 tutorial for beautiful plotting in R"](https://www.cedricscherer.com/2019/08/05/a-ggplot2-tutorial-for-beautiful-plotting-in-r/#legends)
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"slideNumberFormat": "<div class=\"progress-bar-container\">\n  <div class=\"progress-bar\" style=\"width: calc(%current% / %total% * 100%);\">\n  </div>\n</div>\n",
+"highlightStyle": "solarized-light",
+"highlightLanguage": "r",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

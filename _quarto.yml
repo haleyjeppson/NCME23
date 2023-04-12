@@ -1,0 +1,33 @@
+project:
+  type: website
+
+website:
+  title: "NCME23"
+  navbar:
+    background: primary
+    left:
+      - href: index.qmd
+        text: Home
+      - href: schedule.qmd
+        text: Schedule
+      - text: Materials
+        menu:
+        - text: ---
+        - text: "Introduction to ggplot2"
+          href: materials/introduction.html
+        - text: "ggplot2 concepts"
+          href: materials/ggplot-concepts.html
+        - text: "Advanced Customization"
+          href: materials/advanced-customization.html
+        - text: "Extensions"
+          href: materials/extensions.html
+
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+
+
+

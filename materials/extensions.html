@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Extensions &amp; Interactivity</title>
+    <meta charset="utf-8" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <script src="libs/htmlwidgets/htmlwidgets.js"></script>
+    <script src="libs/plotly-binding/plotly.js"></script>
+    <script src="libs/typedarray/typedarray.min.js"></script>
+    <script src="libs/jquery/jquery.min.js"></script>
+    <link href="libs/crosstalk/css/crosstalk.min.css" rel="stylesheet" />
+    <script src="libs/crosstalk/js/crosstalk.min.js"></script>
+    <link href="libs/plotly-htmlwidgets-css/plotly-htmlwidgets.css" rel="stylesheet" />
+    <script src="libs/plotly-main/plotly-latest.min.js"></script>
+    <script src="libs/d3-bundle/d3-bundle.min.js"></script>
+    <script src="libs/d3-lasso/d3-lasso.min.js"></script>
+    <script src="libs/save-svg-as-png/save-svg-as-png.min.js"></script>
+    <script src="libs/flatbush/flatbush.min.js"></script>
+    <link href="libs/ggiraphjs/ggiraphjs.min.css" rel="stylesheet" />
+    <script src="libs/ggiraphjs/ggiraphjs.min.js"></script>
+    <script src="libs/girafe-binding/girafe.js"></script>
+    <link rel="stylesheet" href="css/grayscale.css" type="text/css" />
+    <link rel="stylesheet" href="css/fonts.css" type="text/css" />
+    <link rel="stylesheet" href="css/layouts.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Extensions &amp; Interactivity
+]
+
+---
+
+
+
+
+
+class: inverse
+## Outline
+
+&lt;br&gt;
+### 1. Composing multiple plots
+
+### 2. A plethora of `{ggplot2}` extenstions
+
+### 3. Adding interactivity
+
+---
+## Setup
+
+
+```r
+##  devtools::install_github("haleyjeppson/NCME23data")
+library(NCME23data)
+data(pisa_usa)
+data(pisa_small)
+data(pisa_wide)
+```
+
+---
+class: inverse, center
+background-image: url(https://pbs.twimg.com/media/EStP8qNU0AASPU-?format=jpg&amp;name=4096x4096)
+background-size: 750px
+background-position: 50% 60%
+# Compose multiple plots
+
+
+
+&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;
+&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;
+
+&lt;p style="font-size:15px;text-align:center;"&gt;Artwork by &lt;a href="https://twitter.com/allison_horst?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor"&gt;@allison_horst&lt;/a&gt;&lt;/p&gt;
+
+---
+## Patchwork
+
+First we will build multiple related plots.  Here's the first:
+
+.left-code[
+
+```r
+p1 &lt;- ggplot(pisa_small) +
+  geom_violin(
+    aes(
+      x = math,
+      y = region,
+      color = region,
+      fill = region), 
+    alpha = 0.8
+  ) +
+  theme_light() +
+  ggokabeito::scale_fill_okabe_ito() +
+  ggokabeito::scale_color_okabe_ito() +
+  labs(
+    x = "2015 PISA Math score",
+    y = NULL
+  )
+
+*p1
+```
+]
+.right-plot[
+&lt;img src="extensions_files/figure-html/unnamed-chunk-2-1.png" width="100%" /&gt;
+]
+
+
+---
+## Patchwork
+
+Here's the second ....
+
+.left-code[
+
+```r
+p2 &lt;- ggplot(pisa_small) +
+  geom_bar(
+    aes(
+      y = region,
+      fill = region
+    ),
+    alpha = 0.8
+  ) +
+  theme_light() +
+  ggokabeito::scale_fill_okabe_ito() +
+  ggokabeito::scale_color_okabe_ito() +
+  labs(
+    x = "Number of students",
+    y = NULL
+  )
+
+*p2
+```
+]
+.right-plot[
+&lt;img src="extensions_files/figure-html/unnamed-chunk-3-1.png" width="100%" /&gt;
+]
+
+
+---
+## Patchwork
+
+... and here's the third.
+
+.left-code[
+
+
+```r
+p3 &lt;- ggplot(pisa_wide,
+       aes(x = Female, y = Male)) +
+  geom_abline(
+    alpha = 0.2, 
+    linetype = "dashed"
+  ) +
+  geom_point(
+    aes(color = region), 
+    alpha = 0.9,
+    size = 2.5
+  ) +
+  theme_light() +
+  ggokabeito::scale_fill_okabe_ito() +
+  ggokabeito::scale_color_okabe_ito() +
+  labs(title = "Gender Gaps in PISA 2015 Math Scores",
+       x = "girls math score",
+       y = "boys math score")
+
+*p3
+```
+]
+.right-plot[
+&lt;img src="extensions_files/figure-html/unnamed-chunk-4-1.png" width="100%" /&gt;
+]
+
+
+---
+## Patchwork
+
+Use `+` and `/` to put multiple figures together into a single graphic
+
+.left-code[
+
+```r
+library(patchwork)
+*(p1 | p2) / p3
+```
+]
+.right-plot[
+&lt;img src="extensions_files/figure-html/unnamed-chunk-5-1.png" width="100%" /&gt;
+]
+
+---
+## Patchwork
+
+Use `plot_layout()` to control layout
+
+.left-code[
+
+```r
+(p1 | p2) / p3 + 
+  plot_layout(  
+*   heights = c(1,2),
+*   guides = 'collect'
+  )  
+```
+]
+.right-plot[
+&lt;img src="extensions_files/figure-html/unnamed-chunk-6-1.png" width="100%" /&gt;
+]
+
+
+---
+## Patchwork
+
+Use `&amp;` to apply theme throughout
+
+.left-code[
+
+```r
+(p1 | p2) / p3 + 
+  plot_layout(
+    heights = c(1,2)
+* ) &amp;
+  theme(  
+    legend.position = 'none'  
+  )  
+```
+]
+.right-plot[
+&lt;img src="extensions_files/figure-html/unnamed-chunk-7-1.png" width="100%" /&gt;
+]
+
+---
+## Patchwork
+
+Use `plot_annotation()` to add titles and tags
+
+.left-code[
+
+```r
+(p1 | p2) / p3 + 
+  plot_layout(
+    heights = c(1,2)
+  ) +
+  plot_annotation(
+*   title = 'Pisa Math Scores in 2015',
+*   subtitle = 'A subset of the data shown by region and sex',
+*   tag_levels = 'A'
+  ) &amp;
+  theme(
+    legend.position = 'none'
+  ) 
+```
+]
+.right-plot[
+&lt;img src="extensions_files/figure-html/unnamed-chunk-8-1.png" width="100%" /&gt;
+]
+
+
+
+
+---
+class: inverse, center
+# `{ggplot2}` extensions
+
+&lt;img src="images/gganimate.gif" width = "90%"&gt; 
+
+---
+## `{ggplot2}` extension packages
+
+.pull-left[
+### Theming &amp; Compositions
+
+- [`{cowplot}`](https://cran.r-project.org/web/packages/cowplot/vignettes/introduction.html)
+- [`{ggthemes}`](https://yutannihilation.github.io/allYourFigureAreBelongToUs/ggthemes/)
+- [`{ggrepel}`](https://github.com/slowkow/ggrepel)
+- [`{ggtext}`](https://wilkelab.org/ggtext/)
+
+### Animation &amp; Interactivity
+
+- [`{gganimate}`](https://gganimate.com/)
+- [`{ggigraph}`](https://github.com/davidgohel/ggiraph)
+- [`{plotly}`](https://plotly.com/r/getting-started/)
+]
+.pull-right[
+
+### Additional plot types
+
+- [`{ggpubr}`](https://rpkgs.datanovia.com/ggpubr/)
+- [`{GGally}`](https://ggobi.github.io/ggally/)
+- [`{ggcorrplot}`](http://www.sthda.com/english/wiki/ggcorrplot-visualization-of-a-correlation-matrix-using-ggplot2)
+- [`{ggstatsplot}`](https://github.com/IndrajeetPatil/ggstatsplot)
+- [`{ggdag}`](https://github.com/r-causal/ggdag)
+- [`{ggradar}`](https://github.com/ricardo-bion/ggradar)
+
+]
+.footnote[
+### See [gallery](https://exts.ggplot2.tidyverse.org/gallery/) for more!
+]
+
+---
+## ggrepel
+
+.left-code[
+
+```r
+ggplot(pisa_wide,
+       aes(x = Female, y = Male)) +
+  geom_abline(
+    alpha = 0.2, 
+    linetype = "dashed"
+  ) +
+  geom_point(
+    aes(color = region), 
+    alpha = 0.9,
+    size = 2.5
+  ) +
+* geom_text(
+    aes(label = country)
+  ) +
+  theme_light() +
+  ggokabeito::scale_fill_okabe_ito() +
+  ggokabeito::scale_color_okabe_ito() +
+  labs(
+    title = "Gender Gaps in PISA 2015 Math Scores",
+    x = "girls math score",
+    y = "boys math score"
+  )
+```
+]
+.right-plot[
+&lt;img src="extensions_files/figure-html/unnamed-chunk-9-1.png" width="100%" /&gt;
+]
+
+---
+## ggrepel
+
+.left-code[
+
+```r
+ggplot(pisa_wide,
+       aes(x = Female, y = Male)) +
+  geom_abline(
+    alpha = 0.2, 
+    linetype = "dashed"
+  ) +
+  geom_point(
+    aes(color = region), 
+    alpha = 0.9,
+    size = 2.5
+  ) +
+* ggrepel::geom_text_repel(
+    aes(label = country)
+  ) +
+  theme_light() +
+  ggokabeito::scale_fill_okabe_ito() +
+  ggokabeito::scale_color_okabe_ito() +
+  labs(
+    title = "Gender Gaps in PISA 2015 Math Scores",
+    x = "girls math score",
+    y = "boys math score"
+  )
+```
+]
+.right-plot[
+&lt;img src="extensions_files/figure-html/unnamed-chunk-10-1.png" width="100%" /&gt;
+]
+
+
+
+
+---
+## ggpubr
+
+Grouped scatter plot with marginal density plots
+
+.left-code[
+
+```r
+library(ggpubr)
+
+ggscatterhist(pisa_small, 
+  x = "math", 
+  y = "reading",
+  color = "OECD", 
+  size = 3,
+  alpha = 0.6,
+  palette = c("#3C5488", "#E64B35"),
+  margin.params = list(
+    fill = "OECD",
+    color = "black", 
+    size = 0.2)
+  )
+```
+]
+.right-plot[
+&lt;img src="extensions_files/figure-html/unnamed-chunk-11-1.png" width="100%" /&gt;
+]
+
+
+
+---
+## GGally::ggpairs()
+
+.left-code[
+
+```r
+library(GGally)
+pisa_small_subset &lt;- pisa_small %&gt;%
+  select(OECD, wealth,
+         escs_index, test_anxiety,
+         math:science)
+
+GGally::ggpairs(
+  pisa_small_subset,
+  aes(color = OECD, 
+      alpha = 0.5
+    )
+  ) + 
+  theme_bw() +
+  scale_color_manual(
+    values = c("#3C5488", "#E64B35")
+  ) +
+  scale_fill_manual(
+    values = c("#3C5488", "#E64B35")
+  )
+```
+]
+.right-plot[
+&lt;img src="extensions_files/figure-html/unnamed-chunk-12-1.png" width="100%" /&gt;
+]
+
+
+
+---
+## ggcorrplot()
+
+.left-code[
+
+```r
+# devtools::install_github("kassambara/ggcorrplot")
+library(ggcorrplot)
+pisa_small_subset &lt;- pisa_small %&gt;%
+  select(
+    wealth, escs_index,
+    test_anxiety:parent_support_emotional,
+    teacher_support_science:science)
+         
+cor_pisa &lt;- cor(pisa_small_subset,
+          use = "complete.obs")
+ggcorrplot(cor_pisa, 
+         type = "lower", 
+         outline.col = "white", 
+         ggtheme = ggplot2::theme_light,
+         colors = c(
+         "mediumpurple", "#EEEEEE", 
+         "orange"), 
+         lab = TRUE
+         )
+```
+]
+.right-plot[
+&lt;img src="extensions_files/figure-html/unnamed-chunk-13-1.png" width="100%" /&gt;
+]
+
+---
+## ggstatsplot
+
+`ggbetweenstats()` creates either a violin plot, a box plot, or a mix of two for between-group or between-condition comparisons with results from statistical tests in the subtitle
+
+.left-code[
+
+```r
+# install.packages("ggstatsplot")
+library(ggstatsplot)
+set.seed(123)
+
+ggbetweenstats(
+  data  = pisa_small,
+  x     = OECD,
+  y     = math,
+  title = "Distribution of math scores by OECD status"
+)
+```
+]
+.right-plot[
+&lt;img src="extensions_files/figure-html/unnamed-chunk-14-1.png" width="100%" /&gt;
+]
+
+---
+class: yourturn
+.center[
+## Your Turn
+]
+
+### Look through the [extensions gallery](https://exts.ggplot2.tidyverse.org/gallery/). Pick out a package and install it. 
+
+### **Bonus**: try to run the given example!
+
+
+
+---
+class: inverse, center, middle
+# Interactivity
+
+---
+## ggplotly
+
+.left-code[
+
+```r
+library(plotly)
+*ggplotly(p3)
+```
+]
+.right-plot[
+<div id="htmlwidget-b63eb89bebba0a1e9073" style="width:100%;height:504px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-b63eb89bebba0a1e9073">{"x":{"data":[{"x":[312.170539343693,550.006208528719],"y":[312.170539343693,550.006208528719],"text":"intercept: 0<br />slope: 1","type":"scatter","mode":"lines","line":{"width":null,"color":"rgba(0,0,0,0.2)","dash":"dash"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[539.195496293035,528.819874687632,501.030586922492],"y":[529.992291446994,543.843543633079,522.934688015318],"text":["Female: 539.1955<br />Male: 529.9923<br />region: Asia","Female: 528.8199<br />Male: 543.8435<br />region: Asia","Female: 501.0306<br />Male: 522.9347<br />region: Asia"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(230,159,0,1)","opacity":0.9,"size":9.4488188976378,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(230,159,0,1)"}},"hoveron":"points","name":"(Asia,1)","legendgroup":"(Asia,1)","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[524.629551181523,495.187772746567],"y":[585.632532441973,466.578689312733],"text":["Female: 524.6296<br />Male: 585.6325<br />region: Australia","Female: 495.1878<br />Male: 466.5787<br />region: Australia"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(86,180,233,1)","opacity":0.9,"size":9.4488188976378,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(86,180,233,1)"}},"hoveron":"points","name":"(Australia,1)","legendgroup":"(Australia,1)","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[469.869556133761,478.283740592806,482.486049787893],"y":[465.617754568377,503.895567488086,480.564140571548],"text":["Female: 469.8696<br />Male: 465.6178<br />region: Europe","Female: 478.2837<br />Male: 503.8956<br />region: Europe","Female: 482.4860<br />Male: 480.5641<br />region: Europe"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(0,158,115,1)","opacity":0.9,"size":9.4488188976378,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(0,158,115,1)"}},"hoveron":"points","name":"(Europe,1)","legendgroup":"(Europe,1)","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[405.918287740803,420.879243485581,322.981251579376],"y":[450.79585575172,373.382262491406,433.867871520772],"text":["Female: 405.9183<br />Male: 450.7959<br />region: Middle-East","Female: 420.8792<br />Male: 373.3823<br />region: Middle-East","Female: 322.9813<br />Male: 433.8679<br />region: Middle-East"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(240,228,66,1)","opacity":0.9,"size":9.4488188976378,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(240,228,66,1)"}},"hoveron":"points","name":"(Middle-East,1)","legendgroup":"(Middle-East,1)","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[486.595987657609,404.791607473651,472.350206596311],"y":[533.183655222321,423.617268095913,471.138718121354],"text":["Female: 486.5960<br />Male: 533.1837<br />region: N. America","Female: 404.7916<br />Male: 423.6173<br />region: N. America","Female: 472.3502<br />Male: 471.1387<br />region: N. America"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(0,114,178,1)","opacity":0.9,"size":9.4488188976378,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(0,114,178,1)"}},"hoveron":"points","name":"(N. America,1)","legendgroup":"(N. America,1)","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[358.344573774331,378.849950362102,null],"y":[396.140119238827,405.376496902557,484.305127225329],"text":["Female: 358.3446<br />Male: 396.1401<br />region: S. America","Female: 378.8500<br />Male: 405.3765<br />region: S. America","Female:       NA<br />Male: 484.3051<br />region: S. America"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(213,94,0,1)","opacity":0.9,"size":9.4488188976378,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(213,94,0,1)"}},"hoveron":"points","name":"(S. America,1)","legendgroup":"(S. America,1)","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":40.8401826484018,"r":7.30593607305936,"b":37.2602739726027,"l":43.1050228310502},"plot_bgcolor":"rgba(255,255,255,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"title":{"text":"Gender Gaps in PISA 2015 Math Scores","font":{"color":"rgba(0,0,0,1)","family":"","size":17.5342465753425},"x":0,"xref":"paper"},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[312.170539343693,550.006208528719],"tickmode":"array","ticktext":["350","400","450","500","550"],"tickvals":[350,400,450,500,550],"categoryorder":"array","categoryarray":["350","400","450","500","550"],"nticks":null,"ticks":"outside","tickcolor":"rgba(179,179,179,1)","ticklen":3.65296803652968,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(222,222,222,1)","gridwidth":0,"zeroline":false,"anchor":"y","title":{"text":"girls math score","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[362.769748993877,596.245045939501],"tickmode":"array","ticktext":["400","450","500","550"],"tickvals":[400,450,500,550],"categoryorder":"array","categoryarray":["400","450","500","550"],"nticks":null,"ticks":"outside","tickcolor":"rgba(179,179,179,1)","ticklen":3.65296803652968,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(222,222,222,1)","gridwidth":0,"zeroline":false,"anchor":"x","title":{"text":"boys math score","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":"transparent","line":{"color":"rgba(179,179,179,1)","width":0,"linetype":"solid"},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895},"title":{"text":"region","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"5b50229ab38b":{"intercept":{},"slope":{},"type":"scatter"},"5b507e48fdca":{"x":{},"y":{},"colour":{}}},"cur_data":"5b50229ab38b","visdat":{"5b50229ab38b":["function (y) ","x"],"5b507e48fdca":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+]
+
+---
+## ggplotly
+
+Modify the tooltip output
+
+.left-code[
+
+```r
+p3_updated &lt;- ggplot(pisa_wide,
+       aes(x = Female, y = Male,
+*          text = paste("country:", country)
+       )) +
+  geom_abline(alpha = 0.2, linetype = "dashed") +
+  geom_point(
+    aes(color = region), 
+    alpha = 0.9,
+    size = 2.5
+  ) +
+  theme_light() +
+  ggokabeito::scale_fill_okabe_ito() +
+  ggokabeito::scale_color_okabe_ito() +
+  labs(title = "Gender Gaps in PISA 2015 Math Scores",
+       x = "girls math score",
+       y = "boys math score") 
+
+ggplotly(p3_updated)
+```
+]
+.right-plot[
+<div id="htmlwidget-416cedb1976afdb23805" style="width:100%;height:504px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-416cedb1976afdb23805">{"x":{"data":[{"x":[312.170539343693,550.006208528719],"y":[312.170539343693,550.006208528719],"text":"intercept: 0<br />slope: 1","type":"scatter","mode":"lines","line":{"width":null,"color":"rgba(0,0,0,0.2)","dash":"dash"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[539.195496293035,528.819874687632,501.030586922492],"y":[529.992291446994,543.843543633079,522.934688015318],"text":["Female: 539.1955<br />Male: 529.9923<br />country: B-S-J-G (China)<br />region: Asia","Female: 528.8199<br />Male: 543.8435<br />country: Japan<br />region: Asia","Female: 501.0306<br />Male: 522.9347<br />country: Korea<br />region: Asia"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(230,159,0,1)","opacity":0.9,"size":9.4488188976378,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(230,159,0,1)"}},"hoveron":"points","name":"(Asia,1)","legendgroup":"(Asia,1)","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[524.629551181523,495.187772746567],"y":[585.632532441973,466.578689312733],"text":["Female: 524.6296<br />Male: 585.6325<br />country: Australia<br />region: Australia","Female: 495.1878<br />Male: 466.5787<br />country: New Zealand<br />region: Australia"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(86,180,233,1)","opacity":0.9,"size":9.4488188976378,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(86,180,233,1)"}},"hoveron":"points","name":"(Australia,1)","legendgroup":"(Australia,1)","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[469.869556133761,478.283740592806,482.486049787893],"y":[465.617754568377,503.895567488086,480.564140571548],"text":["Female: 469.8696<br />Male: 465.6178<br />country: France<br />region: Europe","Female: 478.2837<br />Male: 503.8956<br />country: Germany<br />region: Europe","Female: 482.4860<br />Male: 480.5641<br />country: Italy<br />region: Europe"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(0,158,115,1)","opacity":0.9,"size":9.4488188976378,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(0,158,115,1)"}},"hoveron":"points","name":"(Europe,1)","legendgroup":"(Europe,1)","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[405.918287740803,420.879243485581,322.981251579376],"y":[450.79585575172,373.382262491406,433.867871520772],"text":["Female: 405.9183<br />Male: 450.7959<br />country: Israel<br />region: Middle-East","Female: 420.8792<br />Male: 373.3823<br />country: Jordan<br />region: Middle-East","Female: 322.9813<br />Male: 433.8679<br />country: Lebanon<br />region: Middle-East"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(240,228,66,1)","opacity":0.9,"size":9.4488188976378,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(240,228,66,1)"}},"hoveron":"points","name":"(Middle-East,1)","legendgroup":"(Middle-East,1)","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[486.595987657609,404.791607473651,472.350206596311],"y":[533.183655222321,423.617268095913,471.138718121354],"text":["Female: 486.5960<br />Male: 533.1837<br />country: Canada<br />region: N. America","Female: 404.7916<br />Male: 423.6173<br />country: Mexico<br />region: N. America","Female: 472.3502<br />Male: 471.1387<br />country: United States<br />region: N. America"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(0,114,178,1)","opacity":0.9,"size":9.4488188976378,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(0,114,178,1)"}},"hoveron":"points","name":"(N. America,1)","legendgroup":"(N. America,1)","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[358.344573774331,378.849950362102,null],"y":[396.140119238827,405.376496902557,484.305127225329],"text":["Female: 358.3446<br />Male: 396.1401<br />country: Brazil<br />region: S. America","Female: 378.8500<br />Male: 405.3765<br />country: Colombia<br />region: S. America","Female:       NA<br />Male: 484.3051<br />country: Uruguay<br />region: S. America"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(213,94,0,1)","opacity":0.9,"size":9.4488188976378,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(213,94,0,1)"}},"hoveron":"points","name":"(S. America,1)","legendgroup":"(S. America,1)","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":40.8401826484018,"r":7.30593607305936,"b":37.2602739726027,"l":43.1050228310502},"plot_bgcolor":"rgba(255,255,255,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"title":{"text":"Gender Gaps in PISA 2015 Math Scores","font":{"color":"rgba(0,0,0,1)","family":"","size":17.5342465753425},"x":0,"xref":"paper"},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[312.170539343693,550.006208528719],"tickmode":"array","ticktext":["350","400","450","500","550"],"tickvals":[350,400,450,500,550],"categoryorder":"array","categoryarray":["350","400","450","500","550"],"nticks":null,"ticks":"outside","tickcolor":"rgba(179,179,179,1)","ticklen":3.65296803652968,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(222,222,222,1)","gridwidth":0,"zeroline":false,"anchor":"y","title":{"text":"girls math score","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[362.769748993877,596.245045939501],"tickmode":"array","ticktext":["400","450","500","550"],"tickvals":[400,450,500,550],"categoryorder":"array","categoryarray":["400","450","500","550"],"nticks":null,"ticks":"outside","tickcolor":"rgba(179,179,179,1)","ticklen":3.65296803652968,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(222,222,222,1)","gridwidth":0,"zeroline":false,"anchor":"x","title":{"text":"boys math score","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":"transparent","line":{"color":"rgba(179,179,179,1)","width":0,"linetype":"solid"},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895},"title":{"text":"region","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"5b507f3a68a2":{"intercept":{},"slope":{},"type":"scatter"},"5b501ce8675b":{"x":{},"y":{},"text":{},"colour":{}}},"cur_data":"5b507f3a68a2","visdat":{"5b507f3a68a2":["function (y) ","x"],"5b501ce8675b":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+]
+
+---
+## ggplotly
+
+Modify the tooltip output
+
+.left-code[
+
+```r
+ggplotly(p3_updated, 
+* tooltip = c("text", "x", "y")
+  )
+```
+]
+.right-plot[
+<div id="htmlwidget-d69bcf453277810c9964" style="width:100%;height:504px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-d69bcf453277810c9964">{"x":{"data":[{"x":[312.170539343693,550.006208528719],"y":[312.170539343693,550.006208528719],"text":"","type":"scatter","mode":"lines","line":{"width":null,"color":"rgba(0,0,0,0.2)","dash":"dash"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[539.195496293035,528.819874687632,501.030586922492],"y":[529.992291446994,543.843543633079,522.934688015318],"text":["Female: 539.1955<br />Male: 529.9923<br />country: B-S-J-G (China)","Female: 528.8199<br />Male: 543.8435<br />country: Japan","Female: 501.0306<br />Male: 522.9347<br />country: Korea"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(230,159,0,1)","opacity":0.9,"size":9.4488188976378,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(230,159,0,1)"}},"hoveron":"points","name":"(Asia,1)","legendgroup":"(Asia,1)","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[524.629551181523,495.187772746567],"y":[585.632532441973,466.578689312733],"text":["Female: 524.6296<br />Male: 585.6325<br />country: Australia","Female: 495.1878<br />Male: 466.5787<br />country: New Zealand"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(86,180,233,1)","opacity":0.9,"size":9.4488188976378,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(86,180,233,1)"}},"hoveron":"points","name":"(Australia,1)","legendgroup":"(Australia,1)","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[469.869556133761,478.283740592806,482.486049787893],"y":[465.617754568377,503.895567488086,480.564140571548],"text":["Female: 469.8696<br />Male: 465.6178<br />country: France","Female: 478.2837<br />Male: 503.8956<br />country: Germany","Female: 482.4860<br />Male: 480.5641<br />country: Italy"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(0,158,115,1)","opacity":0.9,"size":9.4488188976378,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(0,158,115,1)"}},"hoveron":"points","name":"(Europe,1)","legendgroup":"(Europe,1)","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[405.918287740803,420.879243485581,322.981251579376],"y":[450.79585575172,373.382262491406,433.867871520772],"text":["Female: 405.9183<br />Male: 450.7959<br />country: Israel","Female: 420.8792<br />Male: 373.3823<br />country: Jordan","Female: 322.9813<br />Male: 433.8679<br />country: Lebanon"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(240,228,66,1)","opacity":0.9,"size":9.4488188976378,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(240,228,66,1)"}},"hoveron":"points","name":"(Middle-East,1)","legendgroup":"(Middle-East,1)","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[486.595987657609,404.791607473651,472.350206596311],"y":[533.183655222321,423.617268095913,471.138718121354],"text":["Female: 486.5960<br />Male: 533.1837<br />country: Canada","Female: 404.7916<br />Male: 423.6173<br />country: Mexico","Female: 472.3502<br />Male: 471.1387<br />country: United States"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(0,114,178,1)","opacity":0.9,"size":9.4488188976378,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(0,114,178,1)"}},"hoveron":"points","name":"(N. America,1)","legendgroup":"(N. America,1)","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[358.344573774331,378.849950362102,null],"y":[396.140119238827,405.376496902557,484.305127225329],"text":["Female: 358.3446<br />Male: 396.1401<br />country: Brazil","Female: 378.8500<br />Male: 405.3765<br />country: Colombia","Female:       NA<br />Male: 484.3051<br />country: Uruguay"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(213,94,0,1)","opacity":0.9,"size":9.4488188976378,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(213,94,0,1)"}},"hoveron":"points","name":"(S. America,1)","legendgroup":"(S. America,1)","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":40.8401826484018,"r":7.30593607305936,"b":37.2602739726027,"l":43.1050228310502},"plot_bgcolor":"rgba(255,255,255,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"title":{"text":"Gender Gaps in PISA 2015 Math Scores","font":{"color":"rgba(0,0,0,1)","family":"","size":17.5342465753425},"x":0,"xref":"paper"},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[312.170539343693,550.006208528719],"tickmode":"array","ticktext":["350","400","450","500","550"],"tickvals":[350,400,450,500,550],"categoryorder":"array","categoryarray":["350","400","450","500","550"],"nticks":null,"ticks":"outside","tickcolor":"rgba(179,179,179,1)","ticklen":3.65296803652968,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(222,222,222,1)","gridwidth":0,"zeroline":false,"anchor":"y","title":{"text":"girls math score","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[362.769748993877,596.245045939501],"tickmode":"array","ticktext":["400","450","500","550"],"tickvals":[400,450,500,550],"categoryorder":"array","categoryarray":["400","450","500","550"],"nticks":null,"ticks":"outside","tickcolor":"rgba(179,179,179,1)","ticklen":3.65296803652968,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(222,222,222,1)","gridwidth":0,"zeroline":false,"anchor":"x","title":{"text":"boys math score","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":"transparent","line":{"color":"rgba(179,179,179,1)","width":0,"linetype":"solid"},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895},"title":{"text":"region","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"5b5075f4d2da":{"intercept":{},"slope":{},"type":"scatter"},"5b501c7bd4cb":{"x":{},"y":{},"text":{},"colour":{}}},"cur_data":"5b5075f4d2da","visdat":{"5b5075f4d2da":["function (y) ","x"],"5b501c7bd4cb":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+]
+
+---
+## ggiraph
+
+
+.left-code[
+
+```r
+library(ggiraph)
+p3_int &lt;- ggplot(pisa_wide,
+       aes(x = Female, y = Male)) +
+  geom_abline(alpha = 0.2, linetype = "dashed") +
+* geom_point_interactive(
+    aes(color = region,
+*       tooltip = country,
+*       data_id = country),
+    alpha = 0.9,
+    size = 2.5
+  ) +
+  theme_light() +
+  ggokabeito::scale_fill_okabe_ito() +
+  ggokabeito::scale_color_okabe_ito() +
+  labs(title = "Gender Gaps in PISA 2015 Math Scores",
+       x = "girls math score",
+       y = "boys math score") 
+
+girafe(ggobj = p3_int)
+```
+]
+.right-plot[
+<div id="htmlwidget-fa5c2bd15f18e42d8e75" style="width:100%;height:504px;" class="girafe html-widget"></div>
+<script type="application/json" data-for="htmlwidget-fa5c2bd15f18e42d8e75">{"x":{"html":"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' class='ggiraph-svg' role='img' id='svg_d0cf2c6a_4598_4b47_b917_db4cc6e2ceb3' viewBox='0 0 504 504'>\n <defs id='svg_d0cf2c6a_4598_4b47_b917_db4cc6e2ceb3_defs'>\n  <clipPath id='svg_d0cf2c6a_4598_4b47_b917_db4cc6e2ceb3_c1'>\n   <rect x='0' y='0' width='504' height='504'/>\n  <\/clipPath>\n  <clipPath id='svg_d0cf2c6a_4598_4b47_b917_db4cc6e2ceb3_c2'>\n   <rect x='40.24' y='23.32' width='362.36' height='448.97'/>\n  <\/clipPath>\n <\/defs>\n <g id='svg_d0cf2c6a_4598_4b47_b917_db4cc6e2ceb3_rootg' class='ggiraph-svg-rootg'>\n  <g clip-path='url(#svg_d0cf2c6a_4598_4b47_b917_db4cc6e2ceb3_c1)'>\n   <rect x='0' y='0' width='504' height='504' fill='#FFFFFF' fill-opacity='1' stroke='#FFFFFF' stroke-opacity='1' stroke-width='0.75' stroke-linejoin='round' stroke-linecap='round' class='ggiraph-svg-bg'/>\n   <rect x='0' y='-0' width='504' height='504' fill='#FFFFFF' fill-opacity='1' stroke='#FFFFFF' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='round'/>\n  <\/g>\n  <g clip-path='url(#svg_d0cf2c6a_4598_4b47_b917_db4cc6e2ceb3_c2)'>\n   <rect x='40.24' y='23.32' width='362.36' height='448.97' fill='#FFFFFF' fill-opacity='1' stroke='none'/>\n   <polyline points='40.24,448.78 402.61,448.78' fill='none' stroke='#DEDEDE' stroke-opacity='1' stroke-width='0.27' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='40.24,352.63 402.61,352.63' fill='none' stroke='#DEDEDE' stroke-opacity='1' stroke-width='0.27' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='40.24,256.48 402.61,256.48' fill='none' stroke='#DEDEDE' stroke-opacity='1' stroke-width='0.27' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='40.24,160.33 402.61,160.33' fill='none' stroke='#DEDEDE' stroke-opacity='1' stroke-width='0.27' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='40.24,64.18 402.61,64.18' fill='none' stroke='#DEDEDE' stroke-opacity='1' stroke-width='0.27' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='59.79,472.29 59.79,23.32' fill='none' stroke='#DEDEDE' stroke-opacity='1' stroke-width='0.27' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='135.97,472.29 135.97,23.32' fill='none' stroke='#DEDEDE' stroke-opacity='1' stroke-width='0.27' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='212.15,472.29 212.15,23.32' fill='none' stroke='#DEDEDE' stroke-opacity='1' stroke-width='0.27' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='288.33,472.29 288.33,23.32' fill='none' stroke='#DEDEDE' stroke-opacity='1' stroke-width='0.27' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='364.51,472.29 364.51,23.32' fill='none' stroke='#DEDEDE' stroke-opacity='1' stroke-width='0.27' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='40.24,400.70 402.61,400.70' fill='none' stroke='#DEDEDE' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='40.24,304.55 402.61,304.55' fill='none' stroke='#DEDEDE' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='40.24,208.40 402.61,208.40' fill='none' stroke='#DEDEDE' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='40.24,112.25 402.61,112.25' fill='none' stroke='#DEDEDE' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='97.88,472.29 97.88,23.32' fill='none' stroke='#DEDEDE' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='174.06,472.29 174.06,23.32' fill='none' stroke='#DEDEDE' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='250.24,472.29 250.24,23.32' fill='none' stroke='#DEDEDE' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='326.42,472.29 326.42,23.32' fill='none' stroke='#DEDEDE' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='402.60,472.29 402.60,23.32' fill='none' stroke='#DEDEDE' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <line x1='-322.12' y1='1026.96' x2='764.97' y2='-345.12' stroke='#000000' stroke-opacity='0.2' stroke-width='1.07' stroke-dasharray='4,4' stroke-linejoin='round' stroke-linecap='butt'/>\n   <circle id='svg_d0cf2c6a_4598_4b47_b917_db4cc6e2ceb3_e1' cx='386.14' cy='150.73' r='2.27pt' fill='#E69F00' fill-opacity='0.9' stroke='#E69F00' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='B-S-J-G (China)' data-id='B-S-J-G (China)'/>\n   <circle id='svg_d0cf2c6a_4598_4b47_b917_db4cc6e2ceb3_e2' cx='370.33' cy='124.09' r='2.27pt' fill='#E69F00' fill-opacity='0.9' stroke='#E69F00' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Japan' data-id='Japan'/>\n   <circle id='svg_d0cf2c6a_4598_4b47_b917_db4cc6e2ceb3_e3' cx='327.99' cy='164.3' r='2.27pt' fill='#E69F00' fill-opacity='0.9' stroke='#E69F00' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Korea' data-id='Korea'/>\n   <circle id='svg_d0cf2c6a_4598_4b47_b917_db4cc6e2ceb3_e4' cx='363.94' cy='43.73' r='2.27pt' fill='#56B4E9' fill-opacity='0.9' stroke='#56B4E9' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Australia' data-id='Australia'/>\n   <circle id='svg_d0cf2c6a_4598_4b47_b917_db4cc6e2ceb3_e5' cx='319.09' cy='272.67' r='2.27pt' fill='#56B4E9' fill-opacity='0.9' stroke='#56B4E9' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='New Zealand' data-id='New Zealand'/>\n   <circle id='svg_d0cf2c6a_4598_4b47_b917_db4cc6e2ceb3_e6' cx='280.51' cy='274.52' r='2.27pt' fill='#009E73' fill-opacity='0.9' stroke='#009E73' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='France' data-id='France'/>\n   <circle id='svg_d0cf2c6a_4598_4b47_b917_db4cc6e2ceb3_e7' cx='293.33' cy='200.91' r='2.27pt' fill='#009E73' fill-opacity='0.9' stroke='#009E73' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Germany' data-id='Germany'/>\n   <circle id='svg_d0cf2c6a_4598_4b47_b917_db4cc6e2ceb3_e8' cx='299.74' cy='245.78' r='2.27pt' fill='#009E73' fill-opacity='0.9' stroke='#009E73' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Italy' data-id='Italy'/>\n   <circle id='svg_d0cf2c6a_4598_4b47_b917_db4cc6e2ceb3_e9' cx='183.08' cy='303.02' r='2.27pt' fill='#F0E442' fill-opacity='0.9' stroke='#F0E442' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Israel' data-id='Israel'/>\n   <circle id='svg_d0cf2c6a_4598_4b47_b917_db4cc6e2ceb3_e10' cx='205.87' cy='451.89' r='2.27pt' fill='#F0E442' fill-opacity='0.9' stroke='#F0E442' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Jordan' data-id='Jordan'/>\n   <circle id='svg_d0cf2c6a_4598_4b47_b917_db4cc6e2ceb3_e11' cx='56.72' cy='335.57' r='2.27pt' fill='#F0E442' fill-opacity='0.9' stroke='#F0E442' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Lebanon' data-id='Lebanon'/>\n   <circle id='svg_d0cf2c6a_4598_4b47_b917_db4cc6e2ceb3_e12' cx='306' cy='144.59' r='2.27pt' fill='#0072B2' fill-opacity='0.9' stroke='#0072B2' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Canada' data-id='Canada'/>\n   <circle id='svg_d0cf2c6a_4598_4b47_b917_db4cc6e2ceb3_e13' cx='181.36' cy='355.28' r='2.27pt' fill='#0072B2' fill-opacity='0.9' stroke='#0072B2' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Mexico' data-id='Mexico'/>\n   <circle id='svg_d0cf2c6a_4598_4b47_b917_db4cc6e2ceb3_e14' cx='284.29' cy='263.9' r='2.27pt' fill='#0072B2' fill-opacity='0.9' stroke='#0072B2' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='United States' data-id='United States'/>\n   <circle id='svg_d0cf2c6a_4598_4b47_b917_db4cc6e2ceb3_e15' cx='110.59' cy='408.12' r='2.27pt' fill='#D55E00' fill-opacity='0.9' stroke='#D55E00' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Brazil' data-id='Brazil'/>\n   <circle id='svg_d0cf2c6a_4598_4b47_b917_db4cc6e2ceb3_e16' cx='141.84' cy='390.36' r='2.27pt' fill='#D55E00' fill-opacity='0.9' stroke='#D55E00' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round' title='Colombia' data-id='Colombia'/>\n   <rect x='40.24' y='23.32' width='362.36' height='448.97' fill='none' stroke='#B3B3B3' stroke-opacity='1' stroke-width='1.07' stroke-linejoin='round' stroke-linecap='round'/>\n  <\/g>\n  <g clip-path='url(#svg_d0cf2c6a_4598_4b47_b917_db4cc6e2ceb3_c1)'>\n   <text x='18.53' y='403.91' font-size='6.6pt' font-family='DejaVu Sans' fill='#4D4D4D' fill-opacity='1'>400<\/text>\n   <text x='18.53' y='307.76' font-size='6.6pt' font-family='DejaVu Sans' fill='#4D4D4D' fill-opacity='1'>450<\/text>\n   <text x='18.53' y='211.61' font-size='6.6pt' font-family='DejaVu Sans' fill='#4D4D4D' fill-opacity='1'>500<\/text>\n   <text x='18.53' y='115.46' font-size='6.6pt' font-family='DejaVu Sans' fill='#4D4D4D' fill-opacity='1'>550<\/text>\n   <polyline points='37.50,400.70 40.24,400.70' fill='none' stroke='#B3B3B3' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='37.50,304.55 40.24,304.55' fill='none' stroke='#B3B3B3' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='37.50,208.40 40.24,208.40' fill='none' stroke='#B3B3B3' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='37.50,112.25 40.24,112.25' fill='none' stroke='#B3B3B3' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='97.88,475.03 97.88,472.29' fill='none' stroke='#B3B3B3' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='174.06,475.03 174.06,472.29' fill='none' stroke='#B3B3B3' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='250.24,475.03 250.24,472.29' fill='none' stroke='#B3B3B3' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='326.42,475.03 326.42,472.29' fill='none' stroke='#B3B3B3' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <polyline points='402.60,475.03 402.60,472.29' fill='none' stroke='#B3B3B3' stroke-opacity='1' stroke-width='0.53' stroke-linejoin='round' stroke-linecap='butt'/>\n   <text x='89.49' y='483.64' font-size='6.6pt' font-family='DejaVu Sans' fill='#4D4D4D' fill-opacity='1'>350<\/text>\n   <text x='165.67' y='483.64' font-size='6.6pt' font-family='DejaVu Sans' fill='#4D4D4D' fill-opacity='1'>400<\/text>\n   <text x='241.85' y='483.64' font-size='6.6pt' font-family='DejaVu Sans' fill='#4D4D4D' fill-opacity='1'>450<\/text>\n   <text x='318.03' y='483.64' font-size='6.6pt' font-family='DejaVu Sans' fill='#4D4D4D' fill-opacity='1'>500<\/text>\n   <text x='394.21' y='483.64' font-size='6.6pt' font-family='DejaVu Sans' fill='#4D4D4D' fill-opacity='1'>550<\/text>\n   <text x='177.1' y='496.23' font-size='8.25pt' font-family='DejaVu Sans'>girls math score<\/text>\n   <text transform='translate(13.50,293.43) rotate(-90.00)' font-size='8.25pt' font-family='DejaVu Sans'>boys math score<\/text>\n   <rect x='413.57' y='182.59' width='84.95' height='130.43' fill='#FFFFFF' fill-opacity='1' stroke='none'/>\n   <text x='419.05' y='197.24' font-size='8.25pt' font-family='DejaVu Sans'>region<\/text>\n   <rect x='419.05' y='203.86' width='17.28' height='17.28' fill='#FFFFFF' fill-opacity='1' stroke='none'/>\n   <circle cx='427.69' cy='212.5' r='2.27pt' fill='#E69F00' fill-opacity='0.9' stroke='#E69F00' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round'/>\n   <rect x='419.05' y='221.14' width='17.28' height='17.28' fill='#FFFFFF' fill-opacity='1' stroke='none'/>\n   <circle cx='427.69' cy='229.78' r='2.27pt' fill='#56B4E9' fill-opacity='0.9' stroke='#56B4E9' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round'/>\n   <rect x='419.05' y='238.42' width='17.28' height='17.28' fill='#FFFFFF' fill-opacity='1' stroke='none'/>\n   <circle cx='427.69' cy='247.06' r='2.27pt' fill='#009E73' fill-opacity='0.9' stroke='#009E73' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round'/>\n   <rect x='419.05' y='255.7' width='17.28' height='17.28' fill='#FFFFFF' fill-opacity='1' stroke='none'/>\n   <circle cx='427.69' cy='264.34' r='2.27pt' fill='#F0E442' fill-opacity='0.9' stroke='#F0E442' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round'/>\n   <rect x='419.05' y='272.98' width='17.28' height='17.28' fill='#FFFFFF' fill-opacity='1' stroke='none'/>\n   <circle cx='427.69' cy='281.62' r='2.27pt' fill='#0072B2' fill-opacity='0.9' stroke='#0072B2' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round'/>\n   <rect x='419.05' y='290.26' width='17.28' height='17.28' fill='#FFFFFF' fill-opacity='1' stroke='none'/>\n   <circle cx='427.69' cy='298.9' r='2.27pt' fill='#D55E00' fill-opacity='0.9' stroke='#D55E00' stroke-opacity='0.9' stroke-width='0.71' stroke-linejoin='round' stroke-linecap='round'/>\n   <text x='441.81' y='215.71' font-size='6.6pt' font-family='DejaVu Sans'>Asia<\/text>\n   <text x='441.81' y='232.99' font-size='6.6pt' font-family='DejaVu Sans'>Australia<\/text>\n   <text x='441.81' y='250.27' font-size='6.6pt' font-family='DejaVu Sans'>Europe<\/text>\n   <text x='441.81' y='267.55' font-size='6.6pt' font-family='DejaVu Sans'>Middle-East<\/text>\n   <text x='441.81' y='284.83' font-size='6.6pt' font-family='DejaVu Sans'>N. America<\/text>\n   <text x='441.81' y='302.11' font-size='6.6pt' font-family='DejaVu Sans'>S. America<\/text>\n   <text x='40.24' y='15.1' font-size='9.9pt' font-family='DejaVu Sans'>Gender Gaps in PISA 2015 Math Scores<\/text>\n  <\/g>\n <\/g>\n<\/svg>","js":null,"uid":"svg_d0cf2c6a_4598_4b47_b917_db4cc6e2ceb3","ratio":1,"settings":{"tooltip":{"css":".tooltip_SVGID_ { padding:5px;background:black;color:white;border-radius:2px;text-align:left; ; position:absolute;pointer-events:none;z-index:999;}","placement":"doc","opacity":0.9,"offx":10,"offy":10,"use_cursor_pos":true,"use_fill":false,"use_stroke":false,"delay_over":200,"delay_out":500},"hover":{"css":".hover_data_SVGID_ { fill:orange;stroke:black;cursor:pointer; }\ntext.hover_data_SVGID_ { stroke:none;fill:orange; }\ncircle.hover_data_SVGID_ { fill:orange;stroke:black; }\nline.hover_data_SVGID_, polyline.hover_data_SVGID_ { fill:none;stroke:orange; }\nrect.hover_data_SVGID_, polygon.hover_data_SVGID_, path.hover_data_SVGID_ { fill:orange;stroke:none; }\nimage.hover_data_SVGID_ { stroke:orange; }","reactive":true,"nearest_distance":null},"hover_inv":{"css":""},"hover_key":{"css":".hover_key_SVGID_ { fill:orange;stroke:black;cursor:pointer; }\ntext.hover_key_SVGID_ { stroke:none;fill:orange; }\ncircle.hover_key_SVGID_ { fill:orange;stroke:black; }\nline.hover_key_SVGID_, polyline.hover_key_SVGID_ { fill:none;stroke:orange; }\nrect.hover_key_SVGID_, polygon.hover_key_SVGID_, path.hover_key_SVGID_ { fill:orange;stroke:none; }\nimage.hover_key_SVGID_ { stroke:orange; }","reactive":true},"hover_theme":{"css":".hover_theme_SVGID_ { fill:orange;stroke:black;cursor:pointer; }\ntext.hover_theme_SVGID_ { stroke:none;fill:orange; }\ncircle.hover_theme_SVGID_ { fill:orange;stroke:black; }\nline.hover_theme_SVGID_, polyline.hover_theme_SVGID_ { fill:none;stroke:orange; }\nrect.hover_theme_SVGID_, polygon.hover_theme_SVGID_, path.hover_theme_SVGID_ { fill:orange;stroke:none; }\nimage.hover_theme_SVGID_ { stroke:orange; }","reactive":true},"select":{"css":".select_data_SVGID_ { fill:red;stroke:black;cursor:pointer; }\ntext.select_data_SVGID_ { stroke:none;fill:red; }\ncircle.select_data_SVGID_ { fill:red;stroke:black; }\nline.select_data_SVGID_, polyline.select_data_SVGID_ { fill:none;stroke:red; }\nrect.select_data_SVGID_, polygon.select_data_SVGID_, path.select_data_SVGID_ { fill:red;stroke:none; }\nimage.select_data_SVGID_ { stroke:red; }","type":"multiple","only_shiny":true,"selected":[]},"select_inv":{"css":""},"select_key":{"css":".select_key_SVGID_ { fill:red;stroke:black;cursor:pointer; }\ntext.select_key_SVGID_ { stroke:none;fill:red; }\ncircle.select_key_SVGID_ { fill:red;stroke:black; }\nline.select_key_SVGID_, polyline.select_key_SVGID_ { fill:none;stroke:red; }\nrect.select_key_SVGID_, polygon.select_key_SVGID_, path.select_key_SVGID_ { fill:red;stroke:none; }\nimage.select_key_SVGID_ { stroke:red; }","type":"single","only_shiny":true,"selected":[]},"select_theme":{"css":".select_theme_SVGID_ { fill:red;stroke:black;cursor:pointer; }\ntext.select_theme_SVGID_ { stroke:none;fill:red; }\ncircle.select_theme_SVGID_ { fill:red;stroke:black; }\nline.select_theme_SVGID_, polyline.select_theme_SVGID_ { fill:none;stroke:red; }\nrect.select_theme_SVGID_, polygon.select_theme_SVGID_, path.select_theme_SVGID_ { fill:red;stroke:none; }\nimage.select_theme_SVGID_ { stroke:red; }","type":"single","only_shiny":true,"selected":[]},"zoom":{"min":1,"max":1,"duration":300},"toolbar":{"position":"topright","pngname":"diagram","tooltips":null,"hidden":[],"delay_over":200,"delay_out":500},"sizing":{"rescale":true,"width":1}}},"evals":[],"jsHooks":[]}</script>
+]
+
+---
+&lt;!-- ## ggdag --&gt;
+class: yourturn
+.center[
+## Your Turn
+]
+
+### Take any plot from today's examples and add interactivity with `ggplotly()` (**Bonus**: modify the toolstip)
+
+
+
+
+---
+## Resources
+
+- Documentation: http://ggplot2.tidyverse.org/reference/
+
+- RStudio cheat sheet for [ggplot2](https://posit.co/wp-content/uploads/2022/10/data-visualization-1.pdf)
+
+- Sam Tyner's [ggplot2 workshop](https://sctyner.github.io/user20-proposal.html)
+
+- Thomas Lin Pedersen's ggplot2 webinar: [part 1](https://youtu.be/h29g21z0a68) and [part 2](https://youtu.be/0m4yywqNPVY)
+
+- Cedric Scherer's ["A ggplot2 tutorial for beautiful plotting in R"](https://www.cedricscherer.com/2019/08/05/a-ggplot2-tutorial-for-beautiful-plotting-in-r/#legends)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"slideNumberFormat": "<div class=\"progress-bar-container\">\n  <div class=\"progress-bar\" style=\"width: calc(%current% / %total% * 100%);\">\n  </div>\n</div>\n",
+"highlightStyle": "solarized-light",
+"highlightLanguage": "r",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

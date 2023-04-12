@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Introduction to ggplot2</title>
+    <meta charset="utf-8" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/grayscale.css" type="text/css" />
+    <link rel="stylesheet" href="css/fonts.css" type="text/css" />
+    <link rel="stylesheet" href="css/layouts.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Introduction to ggplot2
+]
+
+---
+
+
+
+
+
+
+class: inverse, center, middle
+
+# 👋 Welcome!
+
+
+---
+## Schedule
+
+### 1. Introduction to `{ggplot2}`
+
+### 2. `{ggplot2}` concepts
+
+### 3. Advanced customization
+
+### 4. Extensions
+
+---
+## Prerequisites
+
+You need a laptop with the following installed:
+
+- R version &gt;= 4.1 and RStudio &gt;= 2022.02.1
+- R package development toolchain: Rtools(windows) or XCode (mac) or&lt;br&gt;r-base-dev
+- The following packages: 
+
+
+```r
+my_packages &lt;- c("rmarkdown", "knitr", "tidyverse", 'patchwork', 
+                 "cowplot",  'colorspace', 'ggtext', 'ggokabeito',
+                 'ggthemes', 'ggdist', 'GGally', 'ggrepel', 'ggpubr',
+                 'ggstatsplot', 'ggdag', 'plotly', 'ggiraph')
+install.packages(my_packages)
+install.packages("devtools")
+devtools::install_github("haleyjeppson/NCME23data")
+devtools::install_github("kassambara/ggcorrplot")
+```
+
+
+
+### WiFi
+
+-   Username: AERA2023
+-   Password: AERA2023
+
+
+---
+
+class: inverse
+## Outline
+
+&lt;br&gt;
+### 1. Set up
+  
+### 2. Intro to `{ggplot2}`
+
+### 3. Motivating example  
+
+
+---
+## Get started
+
+### 1. Get workshop materials
+
+- Clone the workshop repo from GitHub to work locally `(add link)`
+
+### 2. Create a new R Markdown document or R script
+
+- You can follow along in either an .Rmd or R script `(link to files)`
+
+### 3. Attach R packages
+
+
+```r
+# General use packages:
+library(tidyverse)
+library(NCME23data)
+```
+
+---
+## Learning Goals
+
+Upon completion of this workshop, you will be able to:
+
+1. **identify** the appropriate plot types and corresponding `{ggplot2}` geoms to consider when visualizing your data;
+
+2. **implement** the ggplot2 grammar of graphics by using `ggplot()` and build up plots with the `+` operator;
+
+3. **iterate** through multiple visualizations of your data by changing the aesthetic mappings, geometries, and other graph properties;
+
+4. **incorporate** interaction and custom elements (colors, fonts, etc.) into your visualizations by adjusting `{ggplot2}` theme elements; and
+
+5. **investigate** the world of `{ggplot2}` independently to expand upon the skills learned in the course.
+
+
+
+
+---
+class: inverse, center, top
+background-image: url(https://raw.githubusercontent.com/allisonhorst/stats-illustrations/master/rstats-artwork/ggplot2_exploratory.png)
+background-size: 550px
+background-position: 50% 60%
+## Introduction to `{ggplot2}`
+
+&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;
+&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;
+
+&lt;p style="font-size:15px;"&gt;Artwork by &lt;a href="https://twitter.com/allison_horst?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor"&gt;@allison_horst&lt;/a&gt;&lt;/p&gt;
+
+---
+## The `{ggplot2}` Package
+
+&lt;br/&gt;
+... is an **R package to visualize data** created by Hadley Wickham in 2005
+
+
+```r
+# install.packages("ggplot2")
+library(ggplot2)
+```
+
+
+&lt;br/&gt;
+... is part of the `{tidyverse}`
+
+
+```r
+# install.packages("tidyverse")
+library(tidyverse)
+```
+
+
+---
+class: center, bottom
+background-image: url(https://raw.githubusercontent.com/rstudio/hex-stickers/master/PNG/ggplot2.png)
+background-size: 300px
+background-position: 50% 10%
+
+
+### `{ggplot2}` **is a system for declaratively creating &lt;br&gt;graphics, based on "The Grammar of Graphics" &lt;br&gt;(Wilkinson, 2005)**
+
+You provide the data, tell `{ggplot2}` how to **map variables to aesthetics**,&lt;br&gt; what graphical primitives to use, and it takes care of the details.
+
+???
+graphical primitives = geoms / what visual is your data translated into
+
+---
+## Why `{ggplot2}`?
+
+- designed to adhere to good graphical practices (uses the grammar &lt;br&gt;of graphics)
+
+- flexible system that supports a wide of variety plot types 
+
+- constructs plots using the concept of layers
+
+- lots of additional functionality thanks to extensions
+
+- active and helpful community
+
+???
+layering = continue to build upon a plot by adding additional elements to it
+
+---
+
+## Grammar of graphics
+
+- Developed by Leland Wilkinson
+
+- Think about graphical forms rather than a limited set of graphs
+
+- Different types of graphs may appear completely distinct, but share many common elements.
+
+- By making different visual choices, you can use graphs to highlight different aspects of the same data.
+
+&lt;!-- For example, here are three ways of displaying the same data: --&gt;
+
+&lt;img src="introduction_files/figure-html/plots-3-1.png"  /&gt;
+
+
+???
+
+- Charts are instances of much more general objects
+
+- An abstraction which makes thinking, reasoning, and communicating graphics easier
+
+
+---
+## A layered grammar of graphics
+
+A graphical representation (plot) in ggplot2 consists of:
+
+
+1. **default data and mappings** (`aes`):  data variables are mapped to visual properties of the graphical elements
+
+2. **one or more layers**: 
+&lt;ul&gt;
+  &lt;li style=margin-top:-0.8em;&gt; geometric element (&lt;code class="r,css,yaml remark-inline-code"&gt;geom&lt;/code&gt;, such as point, line, rectangle, text, ...),&lt;/li&gt;
+  &lt;li&gt;statistical transformation (&lt;code class="r,css,yaml remark-inline-code"&gt;stat&lt;/code&gt;, such as identity, counts, bins, ...), &lt;/li&gt;
+  &lt;li&gt;position adjustment, &lt;/li&gt;
+  &lt;li&gt;(optional) one dataset and set of aesthetic mappings&lt;/li&gt;
+&lt;/ul&gt;
+3. **scales**: map values in the data space to values in an aesthetic space 
+
+4. **coordinate system** (`coord`): normally Cartesian, but could use polar coordinates for pie charts or different mapping coordinates
+
+5. **facetting**: for small multiples (subsets) and their arrangement
+
+6. **theme**: fine-tune display items, such as font and its size, color of background, margins, ...
+
+???
+
+
+
+### Data
+
+- Representation of data defines what can be done with it
+- Grammar requires a "tidy" format
+
+### Mapping
+
+- Aesthetic mapping: Link variables in data to graphical properties in the geometry.
+
+
+### Statistics
+- Even though data is tidy it may not represent the displayed values  
+- Transform input variables to displayed values:
+  - Count number of obs in each
+category for a bar chart
+  - Calculate summary statistics for a boxplot.
+- is implicit in many plot types but can often be done prior to plotting 
+
+### Geometries
+
+- How to interpret aesthetics as graphical representations 
+
+- (Mostly) determines your
+plot type
+
+### Position
+- How to deal with overlap, if any 
+- `{ggplot2}` has smart defaults here, less work for you
+
+
+
+### Scales
+
+map values in the data space to values in an aesthetic space
+  - Categories → Colour
+  - Numbers → Position
+  
+- Imply a specific interpretation of values; discrete, continuous, etc
+
+### Coordinates
+
+- how data are positioned in a 2D data visualization
+  - normally Cartesian, but could use polar coordinates for pie charts or different mapping coordinates.
+
+### Facets
+
+
+for small multiples (subsets) and their arrangement
+
+### theme
+- None of the priors talked about the visual look of the plot.
+- describes the appearance of the plot
+- Theming spans every part of the graphic that is not linked to data
+
+
+fine-tune display items, such as font and its size, color of background, margins, 
+
+---
+class: inverse, center
+background-image: url(https://pbs.twimg.com/media/FsyupyWWwAIt7LM?format=jpg&amp;name=small)
+background-size: 450px
+background-position: 50% 65%
+
+## The `{ggplot2}` showcase 
+
+&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;
+&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;
+
+&lt;p style="font-size:15px;"&gt;by &lt;a href="https://twitter.com/taferreiraua/status/1642881290151108608"&gt;Thays Ferreira&lt;/a&gt;&lt;/p&gt;
+
+---
+.full-width[
+.pull-left[
+![](https://fediscience.org/system/media_attachments/files/109/558/927/706/700/677/original/660d16dde094342f.png)
+&lt;p style="font-size:15px;margin-top:-3em;text-align:center;"&gt;by &lt;a href="https://fediscience.org/@andrew/109558941216921694"&gt;Andrew Heiss&lt;/a&gt;&lt;/p&gt;
+.center[
+&lt;img src="https://www.datanovia.com/en/wp-content/uploads/dn-tutorials/ggplot2/figures/128-ggplot-examples-marginal-density-plots-1.png" width="300px" /&gt;
+&lt;p style="font-size:15px;margin-top:-3em;text-align:center;"&gt;by &lt;a href="https://www.datanovia.com/en/blog/ggplot-examples-best-reference/#scatter-plot"&gt;Datanovia.com&lt;/a&gt;&lt;/p&gt;
+]]
+.pull-right2[
+![](https://raw.githubusercontent.com/Z3tt/TidyTuesday/master/plots/2020_31/2020_31_PalmerPenguins.png)
+&lt;p style="font-size:15px;margin-top:-3em;text-align:center;"&gt;by &lt;a href="https://github.com/Z3tt/TidyTuesday/tree/main/plots/2020_31"&gt;Cédric Scherer&lt;/a&gt;&lt;/p&gt;
+]]
+
+---
+class: bottom, inverse
+background-image: url(images/evolution.gif)
+background-size: 560px
+background-position: 50% 50%
+
+&lt;!-- ### Evolution of a plot  --&gt;
+
+&lt;!-- &lt;img src="" width = "70%"&gt;   --&gt;
+&lt;p style="font-size:14px;margin-right: -2em;margin-bottom: 0em;text-align: right;"&gt;by &lt;a href="https://github.com/Z3tt/TidyTuesday/tree/main/plots/2020_31"&gt;Cédric Scherer&lt;/a&gt;&lt;/p&gt;
+
+---
+class: inverse, center, top
+background-image: url(https://raw.githubusercontent.com/allisonhorst/stats-illustrations/master/rstats-artwork/ggplot2_masterpiece.png)
+background-size: 650px
+background-position: 50% 60%
+# Motivating Example
+
+&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;
+&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;
+
+&lt;p style="font-size:15px;"&gt;Artwork by &lt;a href="https://twitter.com/allison_horst?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor"&gt;@allison_horst&lt;/a&gt;&lt;/p&gt;
+
+---
+
+![](introduction_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
+
+---
+
+![](introduction_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
+
+???
+or what relationships we want to see
+
+---
+
+![](introduction_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
+
+---
+
+![](introduction_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
+
+---
+
+![](introduction_files/figure-html/unnamed-chunk-9-1.png)&lt;!-- --&gt;
+
+---
+
+![](introduction_files/figure-html/unnamed-chunk-10-1.png)&lt;!-- --&gt;
+
+---
+
+![](introduction_files/figure-html/unnamed-chunk-11-1.png)&lt;!-- --&gt;
+
+
+---
+
+![](introduction_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
+
+
+---
+
+![](introduction_files/figure-html/unnamed-chunk-13-1.png)&lt;!-- --&gt;
+
+
+---
+
+![](introduction_files/figure-html/unnamed-chunk-14-1.png)&lt;!-- --&gt;
+
+
+---
+
+![](introduction_files/figure-html/unnamed-chunk-15-1.png)&lt;!-- --&gt;
+
+
+---
+
+![](introduction_files/figure-html/unnamed-chunk-16-1.png)&lt;!-- --&gt;
+
+---
+
+![](introduction_files/figure-html/unnamed-chunk-17-1.png)&lt;!-- --&gt;
+
+---
+
+
+![](introduction_files/figure-html/unnamed-chunk-18-1.png)&lt;!-- --&gt;
+
+---
+
+class: yourturn
+.center[
+## Your Turn
+]
+
+### Talk with your neighbor, introduce yourself, brainstorm:&lt;br&gt;&amp;emsp;- What other features would you like to include?&lt;br&gt;&amp;emsp;- What other types of visualizations would you like to see?
+
+
+&lt;img src="introduction_files/figure-html/unnamed-chunk-19-1.png" style="display: block; margin: auto;" /&gt;
+
+
+???
+- What other features would you like to include in additional iterations of this data visualization?
+- What other visualizations would you like to see?
+
+
+---
+## Resources
+
+- Documentation: http://ggplot2.tidyverse.org/reference/
+
+- RStudio cheat sheet for [ggplot2](https://posit.co/wp-content/uploads/2022/10/data-visualization-1.pdf)
+
+- Sam Tyner's [ggplot2 workshop](https://sctyner.github.io/user20-proposal.html)
+
+- Thomas Lin Pedersen's ggplot2 webinar: [part 1](https://youtu.be/h29g21z0a68) and [part 2](https://youtu.be/0m4yywqNPVY)
+
+- Cedric Scherer's ["A ggplot2 tutorial for beautiful plotting in R"](https://www.cedricscherer.com/2019/08/05/a-ggplot2-tutorial-for-beautiful-plotting-in-r/#legends)
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"slideNumberFormat": "<div class=\"progress-bar-container\">\n  <div class=\"progress-bar\" style=\"width: calc(%current% / %total% * 100%);\">\n  </div>\n</div>\n",
+"highlightStyle": "solarized-light",
+"highlightLanguage": ["r", "css", "yaml"],
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

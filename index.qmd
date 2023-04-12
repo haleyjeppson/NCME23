@@ -1,0 +1,19 @@
+---
+title: "NCME23"
+---
+
+
+✏️ Haley Jeppson, Brian Habing\
+🗓 April 12, 2023\
+
+
+### Schedule
+
+
+| Time          | Activity                                                                                 |
+|:----------------------------------|:------------------------------------|
+|  | [Session 1: Introduction to ggplot2](materials/introduction.html) |
+|  | [Session 2: ggplot2 concepts](materials/ggplot-concepts.html)          |
+|  | [Session 3: Advanced Customization](materials/advanced-customization.html) |
+|  | [Session 4: Extensions & Interactivy](materials/extensions.html)        
+
