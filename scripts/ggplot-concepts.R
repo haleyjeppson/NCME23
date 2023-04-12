@@ -10,6 +10,10 @@ data(pisa_usa)
 ## weighted sample of 1000
 data(pisa_small)
 
+## OR alternate route:
+pisa_usa <- read_csv("scripts/data/pisa_usa.csv")
+pisa_small <- read_csv("scripts/data/pisa_small.csv")
+
 
 ## -------------------------------------------------------------------------------------------
 library(tidyverse)

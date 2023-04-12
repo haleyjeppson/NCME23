@@ -88,6 +88,10 @@ p +
 ## ----eval = FALSE---------------------------------------------------------------------------
 ## YOUR TURN
 library(NCME23data)
+data(pisa_usa)
+## OR alternate route:
+pisa_usa <- read_csv("scripts/data/pisa_usa.csv")
+
 ggplot(pisa_usa, aes(x = math, y = reading)) +
   geom_point(color = "#3C5488", alpha = .7)
 

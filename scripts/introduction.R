@@ -15,6 +15,10 @@
 library(tidyverse)
 library(NCME23data)
 
+## OR alternate route:
+pisa_small <- read_csv("scripts/data/pisa_small.csv")
+
+
 
 ## ----echo = TRUE----------------------------------------------------------------------------
 # install.packages("ggplot2")

@@ -9,6 +9,10 @@ data(pisa_usa)
 data(pisa_small)
 data(pisa_wide)
 
+## OR alternate route:
+pisa_usa <- read_csv("scripts/data/pisa_usa.csv")
+pisa_small <- read_csv("scripts/data/pisa_small.csv")
+pisa_wide <- read_csv("scripts/data/pisa_wide.csv")
 
 ## ----patchwork0, echo=TRUE, fig.show='hide'-------------------------------------------------
 p1 <- ggplot(pisa_small) +
