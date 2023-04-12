@@ -56,7 +56,6 @@ p1 + p2 + p3
 library(tidyverse)
 library(NCME23data)
 library(colorspace)
-library(ggtext)
 nces_pal <- c("#69cadf", "#f4602a", "#fbb03b", "#3273c2", "#c1cb52", "#bc53a7", "#5daa3a", "#c62f34", "#1bafac")
 data(pisa_small)
 ggplot(data = pisa_small)
@@ -173,20 +172,11 @@ ggplot(data = pisa_small,
         panel.grid.minor.y = element_blank(),
         panel.grid.major.y = element_blank(),
         axis.ticks = element_blank(),
-        axis.text.y = element_text(
-          size = 16
-        ),
+        axis.text.y = element_text(size = 16),
         axis.title.x = element_text(margin = margin(t = 10),
                                     size = 16),
-        plot.title = element_markdown(size = 21),
-        plot.subtitle = element_text(
-          color = "grey40", hjust = 0,
-          margin = margin(0, 0, 20, 0)
-        ),
+        plot.title = element_text(size = 21),
         plot.title.position = "plot",
-        plot.caption = element_markdown(
-          color = "grey40", lineheight = 1.2,
-          margin = margin(20, 0, 0, 0)),
         plot.margin = margin(15, 15, 10, 15))
 
 
@@ -224,25 +214,16 @@ ggplot(data = pisa_small,
   labs(x = "Math score", 
        y = NULL, 
        title = "2015 PISA Math scores by region") +
-  theme_minimal(base_size = 15) +
+  theme_minimal(base_size = 15)  +
   theme(legend.position = "none",
         panel.grid.minor.y = element_blank(),
         panel.grid.major.y = element_blank(),
         axis.ticks = element_blank(),
-        axis.text.y = element_text(
-          size = 16
-        ),
+        axis.text.y = element_text(size = 16),
         axis.title.x = element_text(margin = margin(t = 10),
                                     size = 16),
-        plot.title = element_markdown(size = 21),
-        plot.subtitle = element_text(
-          color = "grey40", hjust = 0,
-          margin = margin(0, 0, 20, 0)
-        ),
+        plot.title = element_text(size = 21),
         plot.title.position = "plot",
-        plot.caption = element_markdown(
-          color = "grey40", lineheight = 1.2,
-          margin = margin(20, 0, 0, 0)),
         plot.margin = margin(15, 15, 10, 15))
 
 
@@ -280,32 +261,23 @@ ggplot(data = pisa_small,
   labs(x = "Math score", 
        y = NULL, 
        title = "2015 PISA Math scores by region") +
-  theme_minimal(base_size = 15) +
+  theme_minimal(base_size = 15)  +
   theme(legend.position = "none",
         panel.grid.minor.y = element_blank(),
         panel.grid.major.y = element_blank(),
         axis.ticks = element_blank(),
-        axis.text.y = element_text(
-          size = 16
-        ),
+        axis.text.y = element_text(size = 16),
         axis.title.x = element_text(margin = margin(t = 10),
                                     size = 16),
-        plot.title = element_markdown(size = 21),
-        plot.subtitle = element_text(
-          color = "grey40", hjust = 0,
-          margin = margin(0, 0, 20, 0)
-        ),
+        plot.title = element_text(size = 21),
         plot.title.position = "plot",
-        plot.caption = element_markdown(
-          color = "grey40", lineheight = 1.2,
-          margin = margin(20, 0, 0, 0)),
         plot.margin = margin(15, 15, 10, 15))
 
 
 ## ----fig.height=9.5, fig.width=12-----------------------------------------------------------
-plot_ex <- ggplot(data = pisa_small, 
-                  aes(x = math, y = region,  color = region, 
-                      fill =  after_scale(lighten(color, .5)))) +
+ggplot(data = pisa_small, 
+       aes(x = math, y = region,  color = region, 
+           fill =  after_scale(lighten(color, .5)))) +
   ggdist::stat_halfeye(
     adjust = .5, 
     height = .6, 
@@ -342,27 +314,17 @@ plot_ex <- ggplot(data = pisa_small,
   labs(x = "Math score", 
        y = NULL,
        title = "2015 PISA Math scores by region") +
-  theme_minimal(base_size = 15) +
+  theme_minimal(base_size = 15)  +
   theme(legend.position = "none",
         panel.grid.minor.y = element_blank(),
         panel.grid.major.y = element_blank(),
         axis.ticks = element_blank(),
-        axis.text.y = element_text(
-          size = 16
-        ),
+        axis.text.y = element_text(size = 16),
         axis.title.x = element_text(margin = margin(t = 10),
                                     size = 16),
-        plot.title = element_markdown(size = 21),
-        plot.subtitle = element_text(
-          color = "grey40", hjust = 0,
-          margin = margin(0, 0, 20, 0)
-        ),
+        plot.title = element_text(size = 21),
         plot.title.position = "plot",
-        plot.caption = element_markdown(
-          color = "grey40", lineheight = 1.2,
-          margin = margin(20, 0, 0, 0)),
         plot.margin = margin(15, 15, 10, 15))
-plot_ex
 
 
 ## ----fig.height=9.5, fig.width=12-----------------------------------------------------------
@@ -405,25 +367,16 @@ plot_ex <- ggplot(data = pisa_small,
   labs(x = "Math score", 
        y = NULL, 
        title = "2015 PISA Math scores by region") +
-  theme_minimal(base_size = 15) +
+  theme_minimal(base_size = 15)  +
   theme(legend.position = "none",
         panel.grid.minor.y = element_blank(),
         panel.grid.major.y = element_blank(),
         axis.ticks = element_blank(),
-        axis.text.y = element_text(
-          size = 16
-        ),
+        axis.text.y = element_text(size = 16),
         axis.title.x = element_text(margin = margin(t = 10),
                                     size = 16),
-        plot.title = element_markdown(size = 21),
-        plot.subtitle = element_text(
-          color = "grey40", hjust = 0,
-          margin = margin(0, 0, 20, 0)
-        ),
+        plot.title = element_text(size = 21),
         plot.title.position = "plot",
-        plot.caption = element_markdown(
-          color = "grey40", lineheight = 1.2,
-          margin = margin(20, 0, 0, 0)),
         plot.margin = margin(15, 15, 10, 15))
 plot_ex
 
