@@ -4,20 +4,27 @@
     "href": "about.html",
     "title": "schedule",
     "section": "",
-    "text": "Day 1\n\n\n\nTime\nActivity\n\n\n\n\n\nSession 1: Introduction to ggplot2\n\n\n\nSession 2: ggplot2 concepts\n\n\n\nSession 3: Advanced Customization\n\n\n\nSession 4: Extensions"
+    "text": "🗓 April 12, 2023\n\n\nDay 1\n\n\n\nTime\nActivity\n\n\n\n\n\nSession 1: Introduction to ggplot2\n\n\n\nSession 2: ggplot2 concepts\n\n\n\nSession 3: Advanced Customization\n\n\n\nSession 4: Extensions"
   },
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "NCME23",
+    "title": "Visualizations and Interactive Graphics using R",
     "section": "",
-    "text": "✏️ Haley Jeppson, Brian Habing\n🗓 April 12, 2023\n\n\nSchedule\n\n\n\nTime\nActivity\n\n\n\n\n\nSession 1: Introduction to ggplot2\n\n\n\nSession 2: ggplot2 concepts\n\n\n\nSession 3: Advanced Customization\n\n\n\nSession 4: Extensions & Interactivy"
+    "text": "✏️ Haley Jeppson, Brian Habing\n🗓 April 12, 2023\n⏰ 1:00 PM - 5:00 PM CDT"
+  },
+  {
+    "objectID": "index.html#prerequisites",
+    "href": "index.html#prerequisites",
+    "title": "Visualizations and Interactive Graphics using R",
+    "section": "Prerequisites",
+    "text": "Prerequisites\nWe will be working with the most recent stable versions of R and RStudio, as well as with a number of additional packages.\n\nInstall R and RStudio\nYou will need:\nR version >= 4.1 RStudio >= 2022.02.1\n\n\nReview\nThis ebook provides an introduction to R programming and serves as a companion to the data visualization workshop at NCME.\n\n\nInstall the necessary CRAN packages\n\nmy_packages <- c(\"rmarkdown\", \"knitr\", \"tidyverse\",\n                 'patchwork', \"cowplot\",  'colorspace', \n                 'ggtext', 'ggokabeito', 'ggthemes',\n                 'ggdist', 'GGally', 'ggrepel', \n                 'ggpubr', 'ggstatsplot', 'ggdag', \n                 'plotly', 'ggiraph')\n\ninstall.packages(my_packages)\n\n\n\nInstall R package development toolchain\n(installation notes from Ian Lyttle)\n\nFor Windows with no admin rights\nDownload the latest (recommended) Rtools installer, Rtools.exe, from https://cran.r-project.org/bin/windows/Rtools/. Run the installer keeping the default settings.\n\n\nFor Windows with admin rights\nDownload the latest (recommended) Rtools installer, Rtools.exe, from https://cran.r-project.org/bin/windows/Rtools/. Run the installer making the following selections: keep the default settings for the installation location and components to install; check the box to add rtools to the system PATH.\n\n\nFor Mac\nInstall XCode. Either:\n\nDownload and install XCode from the Mac AppStore: http://itunes.apple.com/us/app/xcode/id497799835?mt=12\nWithin XCode go to Preferences : Downloads and install the Command Line Tools\n\nOr for a smaller download size:\n\nRegister as an Apple Developer (free) here: https://developer.apple.com/programs/register/\nDownload the Command Line Tools for XCode appropriate for the version of OS X you are running from here: https://developer.apple.com/downloads/\n\n\n\nFor Linux\nIf you installed r-base-dev, when installing R, you should have all you need to build packages from source. Otherwise return to the instructions for installing R for your distribution and follow the instructions there to install the additional tools.\n\n\n\nInstall the devtools and NCME23data packages\nThe aim of devtools is to make package development easier by providing R functions that simplify and expedite common tasks. The R Packages book and the Building Tidy Tools workshop are based on a devtools workflow.\nInstall devtools:\n\ninstall.packages(\"devtools\")\n\nAfter installing the R package development toolchain and devtools, you can verify your system is set up by running:\n\ndevtools::has_devel()\n\nInstall NCME23data from GitHub:\n\ndevtools::install_github(\"haleyjeppson/NCME23data\")\n\nInstall ggcorrplot from GitHub:\n\ndevtools::install_github(\"kassambara/ggcorrplot\")"
   },
   {
     "objectID": "schedule.html",
     "href": "schedule.html",
     "title": "Schedule",
     "section": "",
-    "text": "Time\nActivity\n\n\n\n\n\nSession 1: Introduction to ggplot2\n\n\n\nSession 2: ggplot2 concepts\n\n\n\nSession 3: Advanced Customization\n\n\n\nSession 4: Extensions & Interactivy"
+    "text": "🗓 April 12, 2023 ⏰ 1:00 PM - 5:00 PM CDT\n\n\n\n\n\nActivity\n\n\n\n\nSession 1: Introduction to ggplot2\n\n\nSession 2: ggplot2 concepts\n\n\nSession 3: Advanced Customization\n\n\nSession 4: Extensions & Interactivy"
   }
 ]

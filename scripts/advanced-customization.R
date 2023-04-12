@@ -1,5 +1,5 @@
 ## ----setup, include=FALSE-------------------------------------------------------------------
-\library(tidyverse)
+library(tidyverse)
 library(ggthemes)
 library(ggokabeito)
 
@@ -26,10 +26,6 @@ best_in_class
 
 
 ## ---- ref.label="addtext0", echo=FALSE, out.width='100%'------------------------------------
-
-
-## ----echo = FALSE---------------------------------------------------------------------------
-library(tidyverse)
 
 
 ## ----addtext, echo=TRUE, fig.show='hide'----------------------------------------------------
@@ -90,9 +86,10 @@ p +
 
 
 ## ----eval = FALSE---------------------------------------------------------------------------
-## library(NCME23data)
-## ggplot(pisa_usa, aes(x = math, y = reading)) +
-##   geom_point(color = "#3C5488", alpha = .7)
+## YOUR TURN
+library(NCME23data)
+ggplot(pisa_usa, aes(x = math, y = reading)) +
+  geom_point(color = "#3C5488", alpha = .7)
 
 
 ## ----echo = TRUE, out.width="100%", fig.height=4--------------------------------------------
@@ -365,8 +362,8 @@ iris_plot
 
 
 ## ----eval=FALSE, echo = TRUE----------------------------------------------------------------
-## ggsave("iris-scatter.png", #<<
-##        plot = iris_plot) #<<
+## ggsave("iris-scatter.png", 
+##        plot = iris_plot)
 
 
 ## ---- ref.label="save", echo=FALSE, out.width='100%'----------------------------------------
