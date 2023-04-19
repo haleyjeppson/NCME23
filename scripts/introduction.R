@@ -16,7 +16,7 @@ library(tidyverse)
 library(NCME23data)
 
 ## OR alternate route:
-pisa_small <- read_csv("scripts/data/pisa_small.csv")
+# pisa_small <- read_csv("scripts/data/pisa_small.csv")
 
 
 
@@ -31,6 +31,7 @@ library(tidyverse)
 
 
 ## ----plots-3, echo = FALSE, fig.align='bottom', fig.height=5, fig.width=15------------------
+## Grammar of Graphics examples
 library(ggplot2)
 data(diamonds)
 p1 <- ggplot(diamonds, aes(cut, fill=cut)) + 
@@ -48,7 +49,7 @@ p2 <- ggplot(diamonds, aes(factor(1), fill=cut)) +
 p3 <- ggplot(diamonds, aes(factor(1), fill=cut)) + 
   geom_bar(width=1) + 
   coord_polar(theta= "y") + 
-  labs(x="", title = "Fill-Bar", subtitle = "Polar coordinates") +
+  labs(x="", title = "Pie Chart", subtitle = "Polar coordinates") +
   scale_fill_brewer(palette = "Set2", direction = -1) + 
   theme_minimal()
 
@@ -57,6 +58,7 @@ p1 + p2 + p3
 
 
 ## ----fig.height=9.5, fig.width=12-----------------------------------------------------------
+## BULIDING A PLOT EXAMPLES
 library(tidyverse)
 library(NCME23data)
 library(colorspace)

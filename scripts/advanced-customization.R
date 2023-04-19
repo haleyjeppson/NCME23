@@ -33,9 +33,17 @@ best_in_class <- mpg %>%
   group_by(class) %>%
   filter(row_number(desc(hwy)) == 1)
 
+best_in_class$displ2 <- best_in_class$displ 
+
 ggplot(mpg, aes(displ, hwy)) + 
   geom_point(aes(colour = class)) +
   geom_text(data = best_in_class, #<<
+            aes(x = displ2, label = model)) #<<
+
+
+ggplot(mpg, aes(displ, hwy)) + 
+  geom_point(aes(colour = class)) +
+  geom_label(data = best_in_class, #<<
             aes(label = model)) #<<
 
 
@@ -60,12 +68,49 @@ ggplot(mpg, aes(class)) +
   geom_bar() +
   geom_text( #<<
     aes( #<<
-      y = after_stat(count + 2), #<<
+      y = after_stat(count), #<<
       label = after_stat(count) #<<
     ), #<<
-    stat = "count" #<<
+    stat = "count" ,#<<
+    nudge_y = 2
   ) #<<
 
+ggplot(mpg, aes(class)) +
+  geom_bar() +
+  geom_text( #<<
+    aes( #<<
+      y = after_stat(count), #<<
+      label = class #<<
+    ), #<<
+    stat = "count" ,#<<
+    nudge_y = 2,
+    hjust = "left"
+  )
+
+ggplot(mpg, aes(class)) +
+  geom_bar() +
+  geom_text( #<<
+    aes( #<<
+      y = after_stat(count), #<<
+      label = class #<<
+    ), #<<
+    stat = "count" ,#<<
+    nudge_y = 0.5,
+    hjust = "left"
+  ) +
+  coord_flip()
+
+ggplot(mpg, aes(class)) +
+  geom_bar() +
+  geom_text( #<<
+    aes( #<<
+      y = after_stat(count), #<<
+      label = class #<<
+    ), #<<
+    stat = "count" ,#<<
+    nudge_y = 0.5
+  ) +
+  coord_flip()
 
 ## ---- ref.label="addtext-stat", echo=FALSE, out.width='100%'--------------------------------
 
@@ -82,7 +127,8 @@ p
 p + 
   annotate(geom = "curve", x = 4, y = 35, xend = 2.65, yend = 27, 
            curvature = .3, arrow = arrow(length = unit(2, "mm"))) +
-  annotate(geom = "text", x = 4.1, y = 35, label = "subaru", hjust = "left")
+  annotate(geom = "text", x = 4.1, y = 35, label = "subaru", 
+           hjust = "left")
 
 
 ## ----eval = FALSE---------------------------------------------------------------------------
@@ -90,10 +136,11 @@ p +
 library(NCME23data)
 data(pisa_usa)
 ## OR alternate route:
-pisa_usa <- read_csv("scripts/data/pisa_usa.csv")
+# pisa_usa <- read_csv("scripts/data/pisa_usa.csv")
 
-ggplot(pisa_usa, aes(x = math, y = reading)) +
-  geom_point(color = "#3C5488", alpha = .7)
+ggplot(pisa_usa, aes(x = math, y = reading))+
+  geom_abline(linetype = "dashed", color = "grey50") +
+  geom_point(color = "#3C5488", alpha = .7) 
 
 
 ## ----echo = TRUE, out.width="100%", fig.height=4--------------------------------------------

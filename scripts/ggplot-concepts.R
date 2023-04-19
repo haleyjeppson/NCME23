@@ -11,9 +11,9 @@ data(pisa_usa)
 data(pisa_small)
 
 ## OR alternate route:
-pisa_usa <- read_csv("scripts/data/pisa_usa.csv")
-pisa_small <- read_csv("scripts/data/pisa_small.csv")
-
+# pisa_usa <- read_csv("scripts/data/pisa_usa.csv")
+# pisa_small <- read_csv("scripts/data/pisa_small.csv")
+# pisa_usa$parent_edu <- factor(pisa_usa$parent_edu)
 
 ## -------------------------------------------------------------------------------------------
 library(tidyverse)
@@ -50,7 +50,8 @@ df <- data.frame(
   y = c(2, 4, 6), 
   label = c("a","b","c")
 )
-p <- ggplot(df, aes(x, y, label = label)) + 
+
+p <- ggplot(df, aes(x = x, y = y, label = label)) + 
   labs(x = NULL, y = NULL) + # Hide axis label
   theme_minimal() +
   theme(plot.title = element_text(size = 12)) + # Shrink plot title
@@ -108,6 +109,19 @@ ggplot(
     size = 5 #<<
   )
 
+ggplot(
+  pisa_usa, 
+  aes(x = math, y = reading)
+) +
+  geom_point(
+    color = "red",
+    fill = "#3C5488", #<<
+    alpha = .1, #<<
+    shape = 24, #<<
+    stroke = 2, #<<
+    size = 5 #<<
+  )
+
 
 ## ---- ref.label="geom-plot-visual", echo=FALSE, out.width='100%'----------------------------
 
@@ -122,14 +136,24 @@ ggplot(
     alpha = .7
   )
 
+ggplot(
+  pisa_usa, 
+  aes(x = math, y = reading),
+  color = "#3C5488"
+) +
+  geom_point(
+     #<<
+    alpha = .7
+  )
+
 
 ## ----echo=TRUE------------------------------------------------------------------------------
 ggplot(
     pisa_usa, 
-    aes(x = math, y = reading)
+    aes(x = math)
   ) +
   geom_point(
-    aes(color = sex), #<<
+    aes(y = reading, color = sex), #<<
     alpha = .7
   )
 
@@ -189,15 +213,48 @@ ggplot(pisa_usa) +
         fill = parent_edu), 
     alpha = .7)
 
+class(pisa_usa$parent_edu)
+## what happens if parent_edu is numeric??
+ggplot(pisa_usa) +
+  geom_boxplot( #<<
+    aes(x = as.numeric(parent_edu), y = reading), #<<
+    alpha = .7)
+
+
 
 ## ----eval = FALSE, echo = TRUE--------------------------------------------------------------
-## ggplot(pisa_usa, aes(x = math)) +
-##   ## your code here
+# Use code below to create a histogram of the math scores.
+# Can you modify the width of the bins?
+ggplot(pisa_usa, aes(x = math)) +
+  geom_histogram(binwidth = 15)
 
 
 ## ----eval = FALSE, echo = TRUE--------------------------------------------------------------
-## ggplot(pisa_usa, aes(x = sex, y = math)) +
-##   ## your code here
+# Use code below to create boxplots of math scores by sex.
+# Can you make a violin plot instead a boxplot?
+# Can you add color to the boxplots/violins?
+ggplot(pisa_usa, aes(x = sex, y = math)) +
+  geom_boxplot()
+
+test <- "orange"
+ggplot(pisa_usa, aes(x = sex, y = math)) +
+   geom_violin(color = test)
+ggplot(pisa_usa, aes(x = sex, y = math)) +
+   geom_violin(fill = test)
+ggplot(pisa_usa, aes(x = sex, y = math)) +
+   geom_violin(aes(fill = test))
+ggplot(pisa_usa, aes(x = sex, y = math)) +
+   geom_violin(aes(fill = sex))
+ggplot(pisa_usa, aes(x = sex, y = math)) +
+   geom_violin(aes(fill = sex), color = "orange")
+ggplot(pisa_usa, aes(x = sex, y = math)) +
+   geom_violin(aes(fill = sex, color = sex))
+
+
+
+ggplot(pisa_usa, aes(x = sex, y = math)) +
+  geom_violin(aes(fill = sex, color = sex))
+   ## your code here
 
 
 ## ----add-layer0, echo=TRUE, fig.show='hide'-------------------------------------------------
@@ -257,6 +314,8 @@ ggplot(
 ggplot(pisa_usa, aes(x = parent_edu)) +
   geom_bar() #<<
 
+ggplot(pisa_usa, aes(x = parent_edu)) +
+  geom_bar(stat = "count")
 
 ## ---- ref.label="geombar", echo=FALSE, out.width='100%'-------------------------------------
 
@@ -278,7 +337,23 @@ pisa_usa_counted <- pisa_usa %>%
 ggplot(pisa_usa_counted, 
        aes(x = parent_edu)) +
   geom_bar(aes(y = n),     #<<
-           stat = 'identity')  #<<
+           stat = 'identity') 
+
+## doesn't work:
+ggplot(pisa_usa_counted, 
+       aes(x = parent_edu)) +
+  geom_bar(    #<<
+           stat = 'identity') 
+
+## what it looks like without the weight
+ggplot(pisa_usa_counted, 
+       aes(x = parent_edu)) +
+  geom_bar() 
+
+
+ggplot(pisa_usa_counted, 
+       aes(x = parent_edu)) +
+  geom_bar(aes(weight = n) )
 
 
 ## ---- ref.label="statidentity", echo=FALSE, out.width='100%'--------------------------------
@@ -306,6 +381,26 @@ ggplot(pisa_usa) +
         )  #<<
     )
   )
+
+ggplot(pisa_usa) +
+  geom_bar(
+    aes(
+      x = parent_edu,
+      y = after_stat( #<<
+        count / sum(count) #<<
+      )  #<<
+    )
+  )
+
+ggplot(pisa_usa, aes(x = parent_edu)) +
+  geom_bar() +
+  geom_text(aes(label = after_stat(count)), stat = "count")
+
+
+ggplot(pisa_usa, aes(x = parent_edu)) +
+  geom_bar() +
+  geom_text(aes(label = after_stat(count)), stat = "count",
+            nudge_y = 1)
 
 
 ## ---- ref.label="afterstat", echo=FALSE, out.width='100%'-----------------------------------
@@ -339,12 +434,113 @@ ggplot(pisa_small,
 
 
 ## ---- ref.label="facetwrap", echo=FALSE, out.width='100%'-----------------------------------
+# Use nrow or ncol to alter the shape of the grid in the facet_wrap()
+# example to have two columns. Then again with one row.
+ggplot(pisa_small, 
+       aes(math, reading)) +
+  geom_point(
+    color = "#3C5488",
+    alpha = .7
+  ) +
+  facet_wrap(vars(region)) #<<
+
+ggplot(pisa_small, 
+       aes(math, reading)) +
+  geom_point(
+    color = "#3C5488",
+    alpha = .7
+  ) +
+  facet_wrap(vars(region), ncol =2)
+
+
+ggplot(pisa_small, 
+       aes(math, reading)) +
+  geom_point(
+    color = "#3C5488",
+    alpha = .7
+  ) +
+  facet_wrap(vars(region), nrow =1)
+
+
+ggplot(pisa_small, 
+       aes(math, reading)) +
+  geom_point(
+    color = "#3C5488",
+    alpha = .7
+  ) +
+  facet_grid(cols = vars(region))
+
+# Use the labeller parameter to modify the panel labels in the 
+# facet_grid() example such that the row labels read 
+# 'OCED: Yes' and 'OCED: No'. (Hint: run ?labeller)
+ggplot(pisa_small, 
+       aes(x = math)) +
+  geom_density(
+    color = "#3C5488",
+    fill = "#3C5488",
+    alpha = .7
+  ) +
+  facet_grid( #<<
+    cols = vars(sex),  #<<
+    rows = vars(OECD) #<<
+  )  #<<
+
+
+ggplot(pisa_small, 
+       aes(x = math)) +
+  geom_density(
+    color = "#3C5488",
+    fill = "#3C5488",
+    alpha = .7
+  ) +
+  facet_grid( #<<
+    cols = vars(sex),  #<<
+    rows = vars(OECD), #<<
+    labeller = labeller(.rows = label_both)
+  ) 
+
+ggplot(pisa_small, 
+       aes(x = math)) +
+  geom_density(
+    color = "#3C5488",
+    fill = "#3C5488",
+    alpha = .7
+  ) +
+  facet_grid(OECD~sex)
+
+ggplot(pisa_small, 
+       aes(x = math)) +
+  geom_density(
+    color = "#3C5488",
+    fill = "#3C5488",
+    alpha = .7
+  ) +
+  facet_grid(~sex)
+
+ggplot(pisa_small, 
+       aes(x = math)) +
+  geom_density(
+    color = "#3C5488",
+    fill = "#3C5488",
+    alpha = .7
+  ) +
+  facet_grid(.~sex)
+
+ggplot(pisa_small, 
+       aes(x = math)) +
+  geom_density(
+    color = "#3C5488",
+    fill = "#3C5488",
+    alpha = .7
+  ) +
+  facet_grid(sex~.)
 
 
 ## ----echo=TRUE------------------------------------------------------------------------------
-pisa_plot <- ggplot(pisa_usa, aes(x = math, y = reading, color = sex)) +
+pisa_plot <- ggplot(pisa_usa, 
+                    aes(x = math, y = reading, color = sex)) +
   geom_point(alpha = .7)
-
+pisa_plot
 class(pisa_plot)
 
 
